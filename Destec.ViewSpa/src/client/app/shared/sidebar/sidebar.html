@@ -1,0 +1,215 @@
+<button class="btn btn-default" id="toggle-sidebar" type="button" (click)="eventCalled()">
+    &#9776;
+</button>
+<nav class="sidebar" [ngClass]="{sidebarPushRight: isActive}">
+	<ul class="list-group">
+		<br>
+		<a [routerLink]="['/destec/pedido']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+			<i class="fa fa-fw fa-calendar-minus-o"></i> Pedidos
+		</a>
+		<a [routerLink]="['/destec/atividade']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+			<i class="fa fa-fw fa-calendar-minus-o"></i> Atividades
+		</a>
+		<a [routerLink]="['/destec/kit/cadastro']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+			<i class="fa fa-fw fa-calendar-minus-o"></i> Kit
+		</a>
+
+
+		<!--<div class="nested-menu">
+			<a class="list-group-item" (click)="addExpandClass('cliente')">
+				<span><i class="fa" [class.fa-chevron-down]="showMenu === 'cliente'" [class.fa-chevron-right]="showMenu !== 'cliente'"></i>&nbsp; Cliente</span>
+			</a>
+			<li class="nested" [ngClass]="{'expand' : showMenu === 'cliente' }">
+				<ul class="submenu">
+					<li>
+						<a routerLink="/destec/cliente" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-table"></i> Cadastro
+						</a>
+					</li>
+				</ul>
+			</li>
+		</div>
+
+		<div class="nested-menu">
+			<a class="list-group-item" (click)="addExpandClass('processo')">
+				<span><i class="fa" [class.fa-chevron-down]="showMenu === 'processo'" [class.fa-chevron-right]="showMenu !== 'processo'"></i>&nbsp; Processo</span>
+			</a>
+			<li class="nested" [ngClass]="{'expand' : showMenu === 'processo' }">
+				<ul class="submenu">
+					<li>
+						<a routerLink="/destec/processo/cadastro" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-table"></i> Cadastro
+						</a>
+					</li>
+				</ul>
+				<ul class="submenu">
+					<li>
+						<a routerLink="/destec/processo/notes" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-comment-o"></i> Detalhes de Processo
+						</a>
+					</li>
+				</ul>
+			</li>
+		</div>
+
+		<div class="nested-menu">
+			<a class="list-group-item" (click)="addExpandClass('servico')">
+				<span><i class="fa" [class.fa-chevron-down]="showMenu === 'servico'" [class.fa-chevron-right]="showMenu !== 'servico'"></i>&nbsp; Serviço</span>
+			</a>
+			<li class="nested" [ngClass]="{'expand' : showMenu === 'servico' }">
+				<ul class="submenu">
+					<li>
+						<a routerLink="/destec/servico/cadastro" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-table"></i> Registro de Serviço
+						</a>
+					</li>
+				</ul>
+				<ul class="submenu">
+					<li>
+						<a routerLink="/destec/atividade/execucao" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-hourglass-half"></i> Apontamento de Horas
+						</a>
+					</li>
+				</ul>
+				<ul class="submenu">
+					<li>
+						<a routerLink="/destec/atividade/execucao" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-search"></i> Revisão
+						</a>
+					</li>
+				</ul>
+			</li>
+		</div>
+
+		<div class="nested-menu">
+			<a class="list-group-item" (click)="addExpandClass('honorario')">
+				<span><i class="fa" [class.fa-chevron-down]="showMenu === 'honorario'" [class.fa-chevron-right]="showMenu !== 'honorario'"></i>&nbsp; Honorário</span>
+			</a>
+			<li class="nested" [ngClass]="{'expand' : showMenu === 'honorario' }">
+				<ul class="submenu">
+					<li>
+						<a routerLink="/destec/honorario/cadastro" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-dollar"></i> Registro de Honorários
+						</a>
+					</li>
+				</ul>
+				<ul class="submenu">
+					<li>
+						<a routerLink="/destec/honorario/cobranca" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-fax"></i> Cobrança de Honorários
+						</a>
+					</li>
+				</ul>
+				<ul class="submenu">
+					<li>
+						<a routerLink="/destec/honorario/proposta" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-handshake-o"></i> Proposta de Honorários
+						</a>
+					</li>
+				</ul>
+			</li>
+		</div>
+
+		<div class="nested-menu">
+			<a class="list-group-item" (click)="addExpandClass('relatorio')">
+				<span><i class="fa" [class.fa-chevron-down]="showMenu === 'relatorio'" [class.fa-chevron-right]="showMenu !== 'relatorio'"></i>&nbsp; Relatórios</span>
+			</a>
+			<li class="nested" [ngClass]="{'expand' : showMenu === 'relatorio' }">
+				<ul class="submenu">
+					<li>
+						<a routerLink="/destec/processo/apuracao-comissao" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-calculator"></i> Apuração de Comissão
+						</a>
+					</li>
+				</ul>
+				<ul class="submenu">
+					<li>
+						<a routerLink="/destec/processo/apuracao-associados" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-calculator"></i> Apuração de Associados
+						</a>
+					</li>
+				</ul>
+			</li>
+		</div>
+
+		<div class="nested-menu">
+			<a class="list-group-item" (click)="addExpandClass('parametrizacao')">
+				<span><i class="fa" [class.fa-chevron-down]="showMenu === 'parametrizacao'" [class.fa-chevron-right]="showMenu !== 'parametrizacao'"></i>&nbsp; Parametrização</span>
+			</a>
+			<li class="nested" [ngClass]="{'expand' : showMenu === 'parametrizacao' }">
+				<ul class="submenu">
+					<li>
+						<a routerLink="/destec/atividade/tipo" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-table"></i> Atividade
+						</a>
+					</li>
+					<li>
+						<a routerLink="/destec/parametrizacao/comissao" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-table"></i> Comissão
+						</a>
+					</li>
+				</ul>
+			</li>
+		</div>
+
+		<div class="nested-menu">
+			<a class="list-group-item" (click)="addExpandClass('usuario')">
+				<span><i class="fa" [class.fa-chevron-down]="showMenu === 'usuario'" [class.fa-chevron-right]="showMenu !== 'usuario'"></i>&nbsp; Usuário</span>
+			</a>
+			<li class="nested" [ngClass]="{'expand' : showMenu === 'usuario' }">
+				<ul class="submenu">
+					<li>
+						<a routerLink="/destec/usuario" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-table"></i> Cadastro
+						</a>
+						<a routerLink="/destec/usuario/alterarSenha" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-table"></i> Alterar Senha
+						</a>
+					</li>
+				</ul>
+			</li>
+		</div>-->
+
+
+
+		<!--<a routerLink="/dashboard/home" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-dashboard"></i> Dashboard
+        </a>
+        <a [routerLink]="['chart']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-bar-chart-o"></i> Charts
+        </a>
+        <a [routerLink]="['tables']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-table"></i> Tables
+        </a>
+        <a [routerLink]="['forms']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-edit"></i> Forms
+        </a>
+        <a [routerLink]="['element']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-desktop"></i> Bootstrap Elements
+        </a>
+        <a [routerLink]="['grid']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-wrench"></i> Bootstrap Grid
+        </a>
+        <a [routerLink]="['components']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-th-list"></i> &nbsp;Component
+        </a>
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('pages')">
+                <span><i class="fa fa-plus"></i> &nbsp; Menu</span>
+            </a>
+            <li class="nested" [ngClass]="{'expand' : showMenu === 'pages' }">
+                <ul class="submenu">
+                    <li>
+                        <a href><span>Submenu</span></a>
+                    </li>
+                    <li>
+                        <a href><span>Submenu</span></a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+        <a [routerLink]="['blankpage']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-file-o"></i> &nbsp;BlankPage
+        </a>-->
+	</ul>
+</nav>

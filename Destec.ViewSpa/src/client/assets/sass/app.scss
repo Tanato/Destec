@@ -1,0 +1,209 @@
+@import "var-global.scss";
+@import "../bootstrap/variables.scss";
+@import "app-base.scss";
+@import "select2.scss";
+
+.select2-offscreen[required],
+.select2-offscreen[required]:focus {
+    width: auto !important;
+    height: auto !important;
+}
+
+.form-control-sm{
+    @extend .form-control;
+    padding-right: 8px;
+    padding-left: 6px
+}
+
+.login-logo{
+    background: #6882a7
+}
+
+.input-group-btn{
+    z-index: inherit;
+}
+.input-group{
+    z-index: 1;
+}
+
+.list-group-item-sm {
+    @extend .list-group-item;
+    padding: 3px 10px
+}
+
+textarea {
+    resize: none;
+}
+
+.ng2-auto-complete{
+    width: 100%;
+}
+
+.ng2-auto-complete ng2-auto-complete input{
+    @extend .form-control;
+    @extend .form-item;
+    padding: 0.375rem 0.75rem !important;
+}
+
+// Form validation
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442; /* red */
+}
+
+.sidebar{
+    line-height: 1.2;
+    width: 240px;
+    background-color: #6882a7;
+    background: #6882a7;
+}
+
+.main-container{
+    margin-left: 230px;
+}
+
+.pagination-sm{
+    text-align: center;
+    display: inline-block;
+    margin: 0 auto;
+}
+
+.centered {
+   text-align: center;
+}
+.centered > div {
+   display: inline-block;
+   text-align: left;
+}
+
+// DatePicker
+::-webkit-inner-spin-button { display: none; }
+input[type="date"] {
+     padding: inherit;
+     padding-left: 10px;
+     padding-right: 8px;
+}
+
+.form-item {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    background-image: none;
+    border: none;
+    border-radius: 0.25rem;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
+label{
+    margin-bottom: 0rem;
+}
+
+.form-group {
+    margin-bottom: 0.4rem;
+}
+
+.form-check-label{
+    display: block;
+}
+
+a:hover {
+ cursor:pointer;
+}
+
+table{
+    font-size: 0.9rem;
+}
+.sidebar{
+    .list-group{
+        a.list-group-item{
+                color : #fff;
+        }
+    }
+}
+
+.breadcrumb {
+  > .active {
+    color: #000;
+  }
+  background: transparent;
+}
+
+.nested-menu {
+    .list-group-item {
+        cursor: pointer;
+    }
+    .nested {
+        list-style-type: none;
+    }
+    ul.submenu {
+        list-style-type: none;
+        display: none;
+    }
+    & .expand {
+        ul.submenu {
+            list-style-type: none;
+            height: auto;
+            display: block;
+            padding-left: 25px;
+            li {
+                a.list-group-item{
+                background: $topnav-background-color;
+                border: 0;
+                border-radius: 0;
+                color: #fff;
+                text-decoration: none;
+                }
+                a:hover{
+                    background: darken($topnav-background-color, 5%);
+                    color: #fff;
+                }
+                a.router-link-active{
+                    background: darken($topnav-background-color, 5%);
+                    color: #fff;
+                }
+                a {
+                    padding: 8px;
+                }
+            }
+        }
+    }
+}
+
+.login-page {
+    background: #6882a7;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    color: #000;
+    font-size: 1.5rem;
+    text-align: center; 
+    padding: 3em;
+    .col-lg-4{
+        padding :0;
+    }
+    .input-lg {
+        height: 46px;
+        padding: 10px 16px;
+        line-height: 1.3333333;
+    }
+    h1 {
+        font-weight: 300;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 36px;
+        small {
+            color: rgba(255,255,255,0.7);
+        }
+    }
+    .form-content {
+        padding: 40px 0;
+    }
+}

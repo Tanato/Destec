@@ -1,0 +1,127 @@
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="row">
+        <div class="col-xl-12">
+            <ol class="breadcrumb">
+                <li><a href="Javascript:void(0);" routerLink="/destec/home">Destec</a>
+                </li>
+                <li><a href="Javascript:void(0);" routerLink="/destec/kit/cadastro">Kit</a>
+                </li>
+                <li class="active">
+                    Cadastro de Kit
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="row col-xl-12">
+        <form role="form" #form="ngForm">
+            <fieldset [disabled]="blockEdit">
+                <div class="row">
+                    <div class="form-group col-lg-4">
+                        <label>Nome do Kit:</label>
+                        <input class="form-control" id="nome" [(ngModel)]="model.nome" name="nome" required/>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <label>Descrição:</label>
+                        <input class="form-control" id="descricao" [(ngModel)]="model.descricao" name="descricao" />
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label>Status:</label>
+                        <select class="form-control-sm" id="inativo" [(ngModel)]="model.inativo" name="inativo">
+                            <option value="false">Ativo</option>
+                            <option value="true">Inativo</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+            <br>
+        </form>
+        <form role="formTipoAtividade" #formTipoAtividade="ngForm">
+            <div class="card card-block">
+                <fieldset>
+                    <div class="row" [hidden]="blockEdit">
+                        <div class="form-group col-lg-4">
+                            <label>Nome da Atividade:</label>
+                            <input class="form-control" id="nome" [(ngModel)]="tipoAtividade.nome" name="nome" [required]="tipoAtividade.nome" />
+                        </div>
+                        <div class="form-group col-lg-1">
+                            <label>Ordem:</label>
+                            <select class="form-control-sm" id="ordem" [(ngModel)]="tipoAtividade.ordem" name="ordem" [required]="tipoAtividade.nome">
+                                <option *ngFor="let item of range" [ngValue]="item">{{item}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-1">
+                            <label>Grupo:</label>
+                            <select class="form-control-sm" id="grupo" [(ngModel)]="tipoAtividade.grupo" name="grupo" [required]="tipoAtividade.nome">
+                                <option *ngFor="let item of range" [ngValue]="item">{{item}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-2">
+                            <label>Tempo Estimado:</label>
+                            <input class="form-control" id="tempoEstimado" [(ngModel)]="tipoAtividade.tempoEstimado" [textMask]="{mask: maskTimespan}" name="tempoEstimado" [required]="tipoAtividade.nome"
+                            />
+                        </div>
+                        <div class="form-group col-lg-2">
+                            <label>Pontos:</label>
+                            <input type="number" step="0.01" class="form-control" id="pontos" [(ngModel)]="tipoAtividade.pontos" name="pontos" [required]="tipoAtividade.nome"
+                            />
+                        </div>
+                        <div class="col-lg-2 text-center">
+                            <label>&nbsp;</label>
+                            <button class="btn btn-primary btn-block" [disabled]="!formTipoAtividade.form.valid || !tipoAtividade.nome" (click)="addAtividade()">
+                                <i class="fa" [class.fa-plus]="formType === 'new'" [class.fa-check]="formType !== 'new'" ></i> Atividade
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+                <br>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-sm">
+                        <thead class="thead-default">
+                            <tr>
+                                <th width="40"></th>
+                                <th>Nome</th>
+                                <th>Ordem</th>
+                                <th>Grupo</th>
+                                <th>Tempo Estimado</th>
+                                <th>Pontos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of model?.tipoAtividades" (click)="selectRow(item)">
+                                <td>
+                                    &nbsp;
+                                    <a *ngIf="!model.id" (click)="onDelete(item)"><i class="fa fa-remove"></i></a>
+                                </td>
+                                <td>{{ item.nome }}</td>
+                                <td>{{ item.ordem }}</td>
+                                <td>{{ item.grupo }}</td>
+                                <td>{{ item.tempoEstimado }}</td>
+                                <td>{{ item.pontos }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-2">
+                    <label>&nbsp;</label>
+                    <button [hidden]="!blockEdit" (click)="blockEdit = false" class="btn btn-warning btn-block">Editar</button>
+                </div>
+                <div class="form-group col-lg-6">
+                </div>
+                <div class="col-lg-2">
+                    <label>&nbsp;</label>
+                    <button routerLink="/destec/kit/cadastro" class="btn btn-default btn-block">Fechar</button>
+                </div>
+                <div class="col-lg-2">
+                    <label>&nbsp;</label>
+                    <button (click)="save()" [disabled]="!form.form.valid || blockEdit" class="btn btn-primary btn-block">Salvar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

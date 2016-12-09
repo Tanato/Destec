@@ -1,0 +1,24 @@
+<nav class="navbar navbar-dark bg-inverse navbar-fixed-top topnav">
+    <div class="collapse navbar-toggleable-xs clearfix text-center">
+        <a class="navbar-brand" [routerLink]="['/destec','home']">
+            <img src="assets/img/desteclogosmall.png" height="40px" />
+        </a>
+
+        <ul class="nav navbar-nav top-nav navbar-right pull-xs-right top-right-nav">
+            <li class="dropdown nav-item" dropdown>
+               
+                <li class="dropdown nav-item" dropdown>
+                    <a href="javascript:;" id="single-button" class="nav-link dropdown-toggle" dropdownToggle>
+                        <i class="fa fa-user"></i> {{username.name}} <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="single-button">
+                        <li>
+                            <button class="dropdown-item" (click)='logout()' [routerLink]="['/']">
+                            <i class="fa fa-fw fa-power-off"></i> Log Out
+                        </button>
+                        </li>
+                    </ul>
+                </li>
+        </ul>
+    </div>
+</nav>
