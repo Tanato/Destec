@@ -1,0 +1,23 @@
+﻿<Page
+    x:Class="Destec.PointApp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Destec.PointApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="#FFF0F0F0">
+        <Rectangle x:Name="modeBorderBottom" Fill="#FFF0F0F0" HorizontalAlignment="Left" Height="30" Margin="0,687,0,0" VerticalAlignment="Bottom" Width="2500"/>
+
+        <TextBox x:Name="mainInput" HorizontalAlignment="Left" Margin="376,502,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="164" Width="272" FontSize="110" Opacity="0" MaxLength="3" CharacterSpacing="97" TabIndex="1" KeyDown="mainInput_KeyDown" Background="#FFF0F0F0" BorderBrush="{x:Null}" LostFocus="mainInput_LostFocus"/>
+        <TextBlock Text="{Binding ElementName=mainInput,Path=Text}" Canvas.ZIndex="1" Margin="908,502,77,54" FontSize="110"/>
+
+        <TextBox x:Name="labelMode" HorizontalAlignment="Left" Margin="663,552,0,0" TextWrapping="Wrap" Text="Atividade:" VerticalAlignment="Top" Height="80" Width="266" IsReadOnly="True" IsTapEnabled="False" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" FontSize="50" BorderBrush="{x:Null}" IsTabStop="False" Background="{x:Null}"/>
+        <TextBlock x:Name="labelAtividade" HorizontalAlignment="Left" Margin="64,97,0,0" TextWrapping="Wrap" Text="Atividade 01 101 01 JFJFJ  CALCULAR TAREFA" VerticalAlignment="Top" Height="348" Width="1181" FontSize="100"/>
+        <Ellipse x:Name="statusBall" Fill="#FFF0F0F0" HorizontalAlignment="Left" Height="150" Margin="64,492,0,0" VerticalAlignment="Top" Width="150"/>
+        <Rectangle x:Name="modeBorderLeft" Fill="#FFF0F0F0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="1080"/>
+        <Rectangle x:Name="modeBorderRight" Fill="#FFF0F0F0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Margin="1250,0,0,0" Height="1080"/>
+        <Rectangle x:Name="modeBorderTop" Fill="#FFF0F0F0" HorizontalAlignment="Left" Height="30" Margin="0,0,-1220,690" VerticalAlignment="Top" Width="2500"/>
+    </Grid>
+</Page>
