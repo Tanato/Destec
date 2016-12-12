@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Destec.CoreApi.Migrations
 {
@@ -14,15 +13,16 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Autoincrement", true),
                     AtividadeAtualId = table.Column<int>(nullable: true),
-                    Codigo = table.Column<string>(nullable: true),
+                    Codigo = table.Column<string>(nullable: false),
                     Inativo = table.Column<bool>(nullable: false),
                     Nome = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Funcionarios", x => x.Id);
+                    table.UniqueConstraint("AK_Funcionarios_Codigo", x => x.Codigo);
                 });
 
             migrationBuilder.CreateTable(
@@ -30,7 +30,7 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Autoincrement", true),
                     Descricao = table.Column<string>(nullable: true),
                     Inativo = table.Column<bool>(nullable: false),
                     Nome = table.Column<string>(nullable: true)
@@ -45,7 +45,7 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Autoincrement", true),
                     Cancelado = table.Column<bool>(nullable: false),
                     Codigo = table.Column<string>(nullable: true),
                     DataPedido = table.Column<DateTime>(nullable: true),
@@ -119,7 +119,7 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Autoincrement", true),
                     FuncionarioId = table.Column<int>(nullable: false),
                     GrupoKit = table.Column<int>(nullable: false),
                     KitId = table.Column<int>(nullable: false)
@@ -140,13 +140,13 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Autoincrement", true),
                     Grupo = table.Column<short>(nullable: false),
                     KitId = table.Column<int>(nullable: false),
                     Nome = table.Column<string>(nullable: true),
                     Ordem = table.Column<short>(nullable: false),
-                    Pontos = table.Column<decimal>(nullable: false),
-                    TempoEstimado = table.Column<TimeSpan>(nullable: false)
+                    Pontos = table.Column<decimal>(nullable: true),
+                    TempoEstimado = table.Column<TimeSpan>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -164,9 +164,9 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Autoincrement", true),
                     Cancelado = table.Column<bool>(nullable: false),
-                    KitId = table.Column<int>(nullable: true),
+                    KitId = table.Column<int>(nullable: false),
                     Observacao = table.Column<string>(nullable: true),
                     PedidoId = table.Column<int>(nullable: true),
                     Quantidade = table.Column<int>(nullable: false)
@@ -179,7 +179,7 @@ namespace Destec.CoreApi.Migrations
                         column: x => x.KitId,
                         principalTable: "Kits",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PedidoItems_Pedidos_PedidoId",
                         column: x => x.PedidoId,
@@ -193,7 +193,7 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Autoincrement", true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: true)
@@ -214,7 +214,7 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Autoincrement", true),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
@@ -255,7 +255,7 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Autoincrement", true),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true),
                     RoleId = table.Column<string>(nullable: false)
@@ -300,11 +300,12 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Autoincrement", true),
                     DataFinal = table.Column<DateTime>(nullable: true),
                     DataInicio = table.Column<DateTime>(nullable: true),
-                    FuncionarioId = table.Column<int>(nullable: false),
-                    Intervalo = table.Column<TimeSpan>(nullable: false),
+                    FuncionarioId = table.Column<int>(nullable: true),
+                    GrupoPedidoId = table.Column<int>(nullable: false),
+                    Intervalo = table.Column<TimeSpan>(nullable: true),
                     IntervaloFrom = table.Column<DateTime>(nullable: true),
                     PedidoItemId = table.Column<int>(nullable: false),
                     TipoAtividadeId = table.Column<int>(nullable: false)
@@ -317,7 +318,7 @@ namespace Destec.CoreApi.Migrations
                         column: x => x.FuncionarioId,
                         principalTable: "Funcionarios",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Atividades_PedidoItems_PedidoItemId",
                         column: x => x.PedidoItemId,

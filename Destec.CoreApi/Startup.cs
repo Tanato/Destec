@@ -43,17 +43,8 @@ namespace Destec.CoreApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            if (CurrentEnvironment.IsDevelopment())
-            {
-                var sqlconn = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Destec.CoreSql;Integrated Security=True";
-                services.AddEntityFrameworkSqlServer();
-                services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(sqlconn));
-            }
-            else
-            {
-                services.AddEntityFrameworkSqlServer();
-                services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(GetConnectionString()));
-            }
+            services.AddEntityFrameworkSqlite();
+            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite("Filename=Destec.db"));
 
             services.AddCors(options =>
                 options.AddPolicy("CorsPolicy", p =>
@@ -96,14 +87,6 @@ namespace Destec.CoreApi
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            app.Use(async (context, next) =>
-            {
-                context.Response.Headers.Add("Content-encoding", "gzip");
-                context.Response.Body = new GZipStream(context.Response.Body, CompressionLevel.Fastest);
-                await next();
-                await context.Response.Body.FlushAsync();
-            });
-
             app.EnsureSeedIdentityAsync();
 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));

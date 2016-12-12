@@ -111,7 +111,13 @@
                     <label>&nbsp;</label>
                     <button [hidden]="!blockEdit" (click)="blockEdit = false" class="btn btn-warning btn-block">Editar</button>
                 </div>
-                <div class="form-group col-lg-6">
+                <div class="form-group col-lg-2">
+                </div>
+                <div class="col-lg-2">
+                    <label>&nbsp;</label>
+                    <button [hidden]="!model.id" (click)="gerarPedido()" class="btn btn-warning btn-block">Gerar</button>
+                </div>
+                <div class="form-group col-lg-2">
                 </div>
                 <div class="col-lg-2">
                     <label>&nbsp;</label>

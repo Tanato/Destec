@@ -102,5 +102,31 @@ namespace Destec.CoreApi.Controllers.Business
                 return Ok();
             }
         }
+
+        [HttpGet("gerar/{id}")]
+        public IActionResult GerarPedido(int id)
+        {
+            var kit = db.Kits
+                            .Include(x => x.TipoAtividades)
+                            .Single(x => x.Id == id);
+
+            db.Pedidos.Add(new Pedido
+            {
+                Itens = new PedidoItem[]
+                {
+                    new PedidoItem {
+                        KitId = kit.Id,
+                        Atividades = kit?.TipoAtividades.Select(atividade => new Atividade
+                                                                                {
+                                                                                    TipoAtividadeId = atividade.Id,
+                                                                                    GrupoPedidoId = 1,
+                                                                                }).ToList(),
+                    }
+                }.ToList(),
+            });
+
+            db.SaveChanges();
+            return Ok();
+        }
     }
 }

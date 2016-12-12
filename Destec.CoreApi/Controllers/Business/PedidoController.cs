@@ -62,7 +62,7 @@ namespace Destec.CoreApi.Controllers.Business
             return Ok(item);
         }
 
-        [HttpGet("gerar")]
+        [HttpGet("gerar/{id}")]
         public IActionResult GerarPedido([FromQuery] int id)
         {
             var pedido = db.Pedidos
@@ -77,7 +77,12 @@ namespace Destec.CoreApi.Controllers.Business
                 {
                     foreach (var atividade in item?.Kit?.TipoAtividades)
                     {
-                        db.Atividades.Add(new Atividade { PedidoItemId = item.Id, TipoAtividadeId = atividade.Id });
+                        db.Atividades.Add(new Atividade
+                        {
+                            PedidoItemId = item.Id,
+                            TipoAtividadeId = atividade.Id,
+                            GrupoPedidoId = i,
+                        });
                     }
                 }
             }
@@ -98,7 +103,7 @@ namespace Destec.CoreApi.Controllers.Business
             item.Prazo = update.Prazo;
             item.DataPedido = update.DataPedido;
             item.Cancelado = update.Cancelado;
-            
+
             //foreach (var i in update.Itens)
             //{
             //    var atv = item.TipoAtividades.Single(x => x.Id == i.Id);

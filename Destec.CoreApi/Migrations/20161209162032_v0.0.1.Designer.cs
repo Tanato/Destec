@@ -8,14 +8,13 @@ using Destec.CoreApi.Models;
 namespace Destec.CoreApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20161207212731_v0.0.1")]
+    [Migration("20161209162032_v0.0.1")]
     partial class v001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.1")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "1.0.1");
 
             modelBuilder.Entity("Destec.CoreApi.Models.Business.Atividade", b =>
                 {
@@ -26,9 +25,11 @@ namespace Destec.CoreApi.Migrations
 
                     b.Property<DateTime?>("DataInicio");
 
-                    b.Property<int>("FuncionarioId");
+                    b.Property<int?>("FuncionarioId");
 
-                    b.Property<TimeSpan>("Intervalo");
+                    b.Property<int>("GrupoPedidoId");
+
+                    b.Property<TimeSpan?>("Intervalo");
 
                     b.Property<DateTime?>("IntervaloFrom");
 
@@ -54,13 +55,16 @@ namespace Destec.CoreApi.Migrations
 
                     b.Property<int?>("AtividadeAtualId");
 
-                    b.Property<string>("Codigo");
+                    b.Property<string>("Codigo")
+                        .IsRequired();
 
                     b.Property<bool>("Inativo");
 
                     b.Property<string>("Nome");
 
                     b.HasKey("Id");
+
+                    b.HasAlternateKey("Codigo");
 
                     b.ToTable("Funcionarios");
                 });
@@ -108,7 +112,7 @@ namespace Destec.CoreApi.Migrations
 
                     b.Property<bool>("Cancelado");
 
-                    b.Property<int?>("KitId");
+                    b.Property<int>("KitId");
 
                     b.Property<string>("Observacao");
 
@@ -156,9 +160,9 @@ namespace Destec.CoreApi.Migrations
 
                     b.Property<short>("Ordem");
 
-                    b.Property<decimal>("Pontos");
+                    b.Property<decimal?>("Pontos");
 
-                    b.Property<TimeSpan>("TempoEstimado");
+                    b.Property<TimeSpan?>("TempoEstimado");
 
                     b.HasKey("Id");
 
@@ -353,8 +357,7 @@ namespace Destec.CoreApi.Migrations
                 {
                     b.HasOne("Destec.CoreApi.Models.Business.Funcionario", "Funcionario")
                         .WithMany()
-                        .HasForeignKey("FuncionarioId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("FuncionarioId");
 
                     b.HasOne("Destec.CoreApi.Models.Business.PedidoItem", "PedidoItem")
                         .WithMany("Atividades")
@@ -371,7 +374,8 @@ namespace Destec.CoreApi.Migrations
                 {
                     b.HasOne("Destec.CoreApi.Models.Business.Kit", "Kit")
                         .WithMany()
-                        .HasForeignKey("KitId");
+                        .HasForeignKey("KitId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Destec.CoreApi.Models.Business.Pedido")
                         .WithMany("Itens")

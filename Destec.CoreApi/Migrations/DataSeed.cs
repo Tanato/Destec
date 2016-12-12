@@ -36,10 +36,31 @@ namespace Destec.CoreApi.Migrations
             {
                 var userResult = await userManager.CreateAsync(new User { Name = "Tanato Cartaxo", UserName = "Admin" }, "123Admin");
             }
-
-            if (!context.TipoAtividades.Any())
+            
+            if (!context.Funcionarios.Any())
             {
-                //context.TipoAtividades.Add(new TipoAtividade { Nome = "Atualização" });
+                context.Funcionarios.Add(new Funcionario
+                {
+                    Nome = "Tanato Cartaxo",
+                    Codigo = "142",
+                    Inativo = false,
+                    AtividadeAtualId = null,
+                    TarefaAssociadas = new TarefaAssociada[]
+                    {
+                        new TarefaAssociada { KitId = 1, GrupoKit = 1},
+                    }.ToList(),
+                });
+                context.Funcionarios.Add(new Funcionario
+                {
+                    Nome = "Geraldo Sergio",
+                    Codigo = "955",
+                    Inativo = false,
+                    AtividadeAtualId = null,
+                    TarefaAssociadas = new TarefaAssociada[]
+                    {
+                        new TarefaAssociada { KitId = 1, GrupoKit = 2},
+                    }.ToList(),
+                });
             }
 
             context.SaveChanges();

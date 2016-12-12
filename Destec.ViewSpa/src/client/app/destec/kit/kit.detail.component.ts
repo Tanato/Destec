@@ -22,7 +22,7 @@ export class KitDetailComponent implements OnInit {
 
     public maskTimespan = [/\d/, /\d/, ':', /\d/, /\d/, ':', /\d/, /\d/];
 
-    public range: number[] = _.range(1, 21);
+    public range: number[] = _.range(1, 101);
 
     public id: Observable<string>;
 
@@ -106,5 +106,13 @@ export class KitDetailComponent implements OnInit {
                 this.router.navigateByUrl(link);
             }
         });
+    }
+
+    // ToDo: Remover
+    gerarPedido() {
+        this.service.generateKit(this.model.id)
+            .subscribe((data: any) => {
+                this.toastr.success('Atividades geradas com sucesso!');
+            });
     }
 }

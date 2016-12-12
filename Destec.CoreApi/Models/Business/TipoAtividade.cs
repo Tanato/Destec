@@ -16,8 +16,8 @@ namespace Destec.CoreApi.Models.Business
         public short Ordem { get; set; }
         public short Grupo { get; set; }
 
-        public TimeSpan TempoEstimado { get; set; }
-        public decimal Pontos { get; set; }
+        public TimeSpan? TempoEstimado { get; set; }
+        public decimal? Pontos { get; set; }
 
         public List<Atividade> Atividades { get; set; }
     }

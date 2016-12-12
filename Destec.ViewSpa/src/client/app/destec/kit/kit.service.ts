@@ -9,7 +9,8 @@ import { Kit } from './Kit.model';
 @Injectable()
 export class KitService {
 
-    private url: string = Config.API + 'Kit';
+    private url: string = Config.API + 'kit';
+    private pedidoUrl: string = Config.API + 'pedido';
 
     constructor(private http: Http) { }
 
@@ -47,6 +48,12 @@ export class KitService {
             .catch(this.handleError);
     }
 
+    generateKit(kitId: number) {
+        return this.http.get(this.url + '/gerar/' + kitId)
+            .map(this.handleResult)
+            .catch(this.handleError);
+    }
+
     private handleResult(res: Response) {
         let body = res.json();
         return body || {};
@@ -57,4 +64,3 @@ export class KitService {
         return Observable.throw(error.json().Error || 'Server error');
     }
 }
-

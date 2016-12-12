@@ -19,6 +19,9 @@ using System.Threading.Tasks;
 using Windows.Foundation.Metadata;
 using Windows.UI.ViewManagement;
 using System.Runtime.InteropServices;
+using System.Threading;
+using Windows.System.Threading;
+using Windows.UI.Core;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -31,30 +34,53 @@ namespace Destec.PointApp
     {
         ModeEnum mode = ModeEnum.Normal;
         HttpClient httpClient = new HttpClient();
+        string urlBase = "http://";
         string server = "localhost";
+
+        bool waiting = false;
 
         public MainPage()
         {
             this.InitializeComponent();
-
-            //Ping().GetAwaiter().GetResult();
         }
 
-        private async Task Ping()
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            var response = await httpClient.GetAsync(new Uri(server + ":5000/ping/" + mainInput.Text));
-            if (response.StatusCode == HttpStatusCode.BadRequest)
+            if (e.Parameter is string && !string.IsNullOrEmpty(e.Parameter.ToString()))
             {
+                server = e.Parameter.ToString();
+            }
+            base.OnNavigatedTo(e);
+        }
 
+        private async void Grid_Loaded(object sender, RoutedEventArgs e)
+        {
+            var result = await Ping();
+            if (!result)
+            {
+                Frame.Navigate(typeof(GetIpPage));
+            }
+        }
+
+        private async Task<bool> Ping()
+        {
+            try
+            {
+                var response = await httpClient.GetAsync(new Uri(urlBase + server + ":5000/api/ping"));
+                return (response.StatusCode == HttpStatusCode.Ok);
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 
         private void SetColor(Color color)
         {
-            this.modeBorderLeft.Fill = new SolidColorBrush(color);
-            this.modeBorderBottom.Fill = new SolidColorBrush(color);
-            this.modeBorderRight.Fill = new SolidColorBrush(color);
-            this.modeBorderTop.Fill = new SolidColorBrush(color);
+            modeBorderLeft.Fill = new SolidColorBrush(color);
+            modeBorderBottom.Fill = new SolidColorBrush(color);
+            modeBorderRight.Fill = new SolidColorBrush(color);
+            modeBorderTop.Fill = new SolidColorBrush(color);
 
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
             {
@@ -82,21 +108,25 @@ namespace Destec.PointApp
                 try
                 {
                     HttpResponseMessage response = null;
-                    switch (mode)
+                    using (var http = new HttpClient())
                     {
-                        case ModeEnum.Normal:
-                            response = await httpClient.GetAsync(new Uri(server + ":5000/execute/" + mainInput.Text));
-                            break;
-                        case ModeEnum.Intervalo:
-                            response = await httpClient.GetAsync(new Uri(server + ":5000/interval/" + mainInput.Text));
-                            break;
-                        case ModeEnum.Parada:
-                            response = await httpClient.GetAsync(new Uri(server + ":5000/stop/" + mainInput.Text));
-                            break;
-                        default:
-                            break;
+                        switch (mode)
+                        {
+                            case ModeEnum.Normal:
+                                response = await http.PostAsync(new Uri(urlBase + server + ":5000/api/atividade/execute?code=" + mainInput.Text), null);
+                                break;
+                            case ModeEnum.Intervalo:
+                                response = await http.PostAsync(new Uri(urlBase + server + ":5000/api/atividade/interval?code=" + mainInput.Text), null);
+                                break;
+                            case ModeEnum.Parada:
+                                response = await http.PostAsync(new Uri(urlBase + server + ":5000/api/atividade/stop?code=" + mainInput.Text), null);
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                    handleResponse(response);
+                    await HandleResponseAsync(response);
+                    response = null;
                 }
                 catch (Exception)
                 {
@@ -106,11 +136,32 @@ namespace Destec.PointApp
             }
         }
 
-        private static void handleResponse(HttpResponseMessage response)
+        private async Task HandleResponseAsync(HttpResponseMessage response)
         {
-            if (response != null)
+            if (response != null && response.StatusCode == HttpStatusCode.Ok)
             {
-
+                labelAtividade.Text = response?.Content?.ToString();
+                waiting = true;
+                statusBall.Fill = new SolidColorBrush(Colors.Green);
+                if (response.Content != null && response.Content.ToString().Equals("Intervalo iniciado."))
+                    await Task.Delay(TimeSpan.FromMilliseconds(1400));
+                else
+                    await Task.Delay(TimeSpan.FromSeconds(4));
+                waiting = false;
+                statusBall.Fill = new SolidColorBrush(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
+                mainInput.Text = "";
+                labelAtividade.Text = "";
+            }
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                labelAtividade.Text = response?.Content?.ToString();
+                waiting = true;
+                statusBall.Fill = new SolidColorBrush(Colors.Red);
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                waiting = false;
+                statusBall.Fill = new SolidColorBrush(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
+                mainInput.Text = "";
+                labelAtividade.Text = "";
             }
             else
             {
@@ -131,7 +182,7 @@ namespace Destec.PointApp
                     mode = ModeEnum.Parada;
                     break;
                 case ModeEnum.Parada:
-                    SetColor(Color.FromArgb(0xFF,0xF0, 0xF0, 0xF0));
+                    SetColor(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
                     mode = ModeEnum.Normal;
                     break;
                 default:
@@ -144,6 +195,11 @@ namespace Destec.PointApp
         #region Eventos
         private async void mainInput_KeyDown(object sender, KeyRoutedEventArgs e)
         {
+            if (waiting)
+            {
+                e.Handled = true;
+            }
+
             switch (e.Key)
             {
                 case VirtualKey.NumberKeyLock:
@@ -158,27 +214,43 @@ namespace Destec.PointApp
                     break;
                 case VirtualKey.Clear:
                     e.Handled = true;
-                    //e.Key = VirtualKey.NumberPad5;
+                    keyPress(5);
                     break;
                 case VirtualKey.Enter:
-                    await ExecuteActionAsync();
                     e.Handled = true;
+                    await ExecuteActionAsync();
                     break;
                 //case VirtualKey.PageUp:
+                //    e.Handled = true;
+                //    keyPress(9);
                 //    break;
                 //case VirtualKey.PageDown:
+                //    e.Handled = true;
+                //    keyPress(3);
                 //    break;
                 //case VirtualKey.End:
+                //    e.Handled = true;
+                //    keyPress(1);
                 //    break;
                 //case VirtualKey.Home:
+                //    e.Handled = true;
+                //    keyPress(7);
                 //    break;
                 //case VirtualKey.Left:
+                //    e.Handled = true;
+                //    keyPress(4);
                 //    break;
                 //case VirtualKey.Up:
+                //    e.Handled = true;
+                //    keyPress(8);
                 //    break;
                 //case VirtualKey.Right:
+                //    e.Handled = true;
+                //    keyPress(6);
                 //    break;
                 //case VirtualKey.Down:
+                //    e.Handled = true;
+                //    keyPress(2);
                 //    break;
                 case VirtualKey.Number0:
                 case VirtualKey.Number1:
@@ -224,6 +296,14 @@ namespace Destec.PointApp
                     else
                         e.Handled = true;
                     break;
+            }
+        }
+
+        private void keyPress(int v)
+        {
+            if (mainInput.Text.Length < mainInput.MaxLength)
+            {
+                mainInput.Text += v;
             }
         }
         #endregion
