@@ -168,7 +168,7 @@ namespace Destec.CoreApi.Migrations
                     Cancelado = table.Column<bool>(nullable: false),
                     KitId = table.Column<int>(nullable: false),
                     Observacao = table.Column<string>(nullable: true),
-                    PedidoId = table.Column<int>(nullable: true),
+                    PedidoId = table.Column<int>(nullable: false),
                     Quantidade = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -185,7 +185,7 @@ namespace Destec.CoreApi.Migrations
                         column: x => x.PedidoId,
                         principalTable: "Pedidos",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -304,10 +304,13 @@ namespace Destec.CoreApi.Migrations
                     DataFinal = table.Column<DateTime>(nullable: true),
                     DataInicio = table.Column<DateTime>(nullable: true),
                     FuncionarioId = table.Column<int>(nullable: true),
-                    GrupoPedidoId = table.Column<int>(nullable: false),
                     Intervalo = table.Column<TimeSpan>(nullable: true),
                     IntervaloFrom = table.Column<DateTime>(nullable: true),
+                    KitPedidoId = table.Column<int>(nullable: false),
+                    Parada = table.Column<TimeSpan>(nullable: true),
+                    ParadaFrom = table.Column<DateTime>(nullable: true),
                     PedidoItemId = table.Column<int>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
                     TipoAtividadeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -339,9 +342,19 @@ namespace Destec.CoreApi.Migrations
                 column: "FuncionarioId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Atividades_KitPedidoId",
+                table: "Atividades",
+                column: "KitPedidoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Atividades_PedidoItemId",
                 table: "Atividades",
                 column: "PedidoItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Atividades_Status",
+                table: "Atividades",
+                column: "Status");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Atividades_TipoAtividadeId",

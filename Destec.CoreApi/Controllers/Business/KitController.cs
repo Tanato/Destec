@@ -1,5 +1,6 @@
 ﻿using Destec.CoreApi.Models;
 using Destec.CoreApi.Models.Business;
+using Destec.CoreApi.Shared.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -106,26 +107,39 @@ namespace Destec.CoreApi.Controllers.Business
         [HttpGet("gerar/{id}")]
         public IActionResult GerarPedido(int id)
         {
-            var kit = db.Kits
-                            .Include(x => x.TipoAtividades)
-                            .Single(x => x.Id == id);
+            var atividades = db.TipoAtividades
+                            .OrderBy(x => x.Ordem)
+                            .Where(x => x.KitId == id);
 
-            db.Pedidos.Add(new Pedido
+            var pedidos = new List<Pedido>();
+
+            for (int i = 0; i < 10000; i++)
             {
-                Itens = new PedidoItem[]
+                pedidos.Add(new Pedido
                 {
+                    Itens = new PedidoItem[]
+                    {
                     new PedidoItem {
-                        KitId = kit.Id,
-                        Atividades = kit?.TipoAtividades.Select(atividade => new Atividade
-                                                                                {
-                                                                                    TipoAtividadeId = atividade.Id,
-                                                                                    GrupoPedidoId = 1,
-                                                                                }).ToList(),
+                        KitId = id,
+                        Atividades = atividades.Select(atividade => new Atividade
+                                                                        {
+                                                                            TipoAtividadeId = atividade.Id,
+                                                                            KitPedidoId = 1,
+                                                                            Status = AtividadeStatusEnum.Criada,
+                                                                        }).ToList(),
                     }
-                }.ToList(),
-            });
+                    }.ToList(),
+                });
+            }
 
-            db.SaveChanges();
+            var m = atividades.Count() * 100;
+
+            for (int i = 0; i < m; i++)
+            {
+                db.Pedidos.AddRange(pedidos.Skip(i * m).Take(m));
+                db.SaveChanges();
+            }
+
             return Ok();
         }
     }

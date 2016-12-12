@@ -30,6 +30,12 @@ namespace Destec.CoreApi.Models
             builder.Entity<IdentityRole>().ToTable("Roles");
 
             builder.Entity<Funcionario>().HasAlternateKey(x => x.Codigo);
+
+            builder.Entity<Atividade>().HasIndex(x => x.Status);
+            builder.Entity<Atividade>().HasIndex(x => x.FuncionarioId);
+            builder.Entity<Atividade>().HasIndex(x => x.PedidoItemId);
+            builder.Entity<Atividade>().HasIndex(x => x.TipoAtividadeId);
+            builder.Entity<Atividade>().HasIndex(x => x.KitPedidoId);
         }
     }
 }

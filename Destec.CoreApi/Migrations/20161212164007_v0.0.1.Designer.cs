@@ -8,7 +8,7 @@ using Destec.CoreApi.Models;
 namespace Destec.CoreApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20161209162032_v0.0.1")]
+    [Migration("20161212164007_v0.0.1")]
     partial class v001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,13 +27,19 @@ namespace Destec.CoreApi.Migrations
 
                     b.Property<int?>("FuncionarioId");
 
-                    b.Property<int>("GrupoPedidoId");
-
                     b.Property<TimeSpan?>("Intervalo");
 
                     b.Property<DateTime?>("IntervaloFrom");
 
+                    b.Property<int>("KitPedidoId");
+
+                    b.Property<TimeSpan?>("Parada");
+
+                    b.Property<DateTime?>("ParadaFrom");
+
                     b.Property<int>("PedidoItemId");
+
+                    b.Property<int>("Status");
 
                     b.Property<int>("TipoAtividadeId");
 
@@ -41,7 +47,11 @@ namespace Destec.CoreApi.Migrations
 
                     b.HasIndex("FuncionarioId");
 
+                    b.HasIndex("KitPedidoId");
+
                     b.HasIndex("PedidoItemId");
+
+                    b.HasIndex("Status");
 
                     b.HasIndex("TipoAtividadeId");
 
@@ -116,7 +126,7 @@ namespace Destec.CoreApi.Migrations
 
                     b.Property<string>("Observacao");
 
-                    b.Property<int?>("PedidoId");
+                    b.Property<int>("PedidoId");
 
                     b.Property<int>("Quantidade");
 
@@ -377,9 +387,10 @@ namespace Destec.CoreApi.Migrations
                         .HasForeignKey("KitId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Destec.CoreApi.Models.Business.Pedido")
+                    b.HasOne("Destec.CoreApi.Models.Business.Pedido", "Pedido")
                         .WithMany("Itens")
-                        .HasForeignKey("PedidoId");
+                        .HasForeignKey("PedidoId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Destec.CoreApi.Models.Business.TarefaAssociada", b =>

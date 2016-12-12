@@ -14,7 +14,10 @@ namespace Destec.CoreApi.Models.Business
 
         public int KitId { get; set; }
         public Kit Kit { get; set; }
-        
+
+        public int PedidoId { get; set; }
+        public Pedido Pedido { get; set; }
+
         public bool Cancelado { get; set; }
 
         public List<Atividade> Atividades { get; set; }

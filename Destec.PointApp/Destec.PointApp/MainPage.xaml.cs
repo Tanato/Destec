@@ -146,7 +146,7 @@ namespace Destec.PointApp
                 if (response.Content != null && response.Content.ToString().Equals("Intervalo iniciado."))
                     await Task.Delay(TimeSpan.FromMilliseconds(1400));
                 else
-                    await Task.Delay(TimeSpan.FromSeconds(4));
+                    await Task.Delay(TimeSpan.FromMilliseconds(3200));
                 waiting = false;
                 statusBall.Fill = new SolidColorBrush(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
                 mainInput.Text = "";
@@ -198,6 +198,8 @@ namespace Destec.PointApp
             if (waiting)
             {
                 e.Handled = true;
+                waiting = e.Key != VirtualKey.Enter;
+                return;
             }
 
             switch (e.Key)
@@ -218,7 +220,7 @@ namespace Destec.PointApp
                     break;
                 case VirtualKey.Enter:
                     e.Handled = true;
-                    await ExecuteActionAsync();
+                        await ExecuteActionAsync();
                     break;
                 //case VirtualKey.PageUp:
                 //    e.Handled = true;

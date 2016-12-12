@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Destec.CoreApi.Shared.Enum;
+using System;
 
 namespace Destec.CoreApi.Models.Business
 {
     public class Atividade
     {
         public int Id { get; set; }
-        public int GrupoPedidoId { get; set; }
+        public int KitPedidoId { get; set; }
 
         public int TipoAtividadeId { get; set; }
         public TipoAtividade TipoAtividade { get; set; }
@@ -24,5 +22,10 @@ namespace Destec.CoreApi.Models.Business
 
         public DateTime? IntervaloFrom { get; set; }
         public TimeSpan? Intervalo { get; set; }
+        
+        public DateTime? ParadaFrom { get; set; }
+        public TimeSpan? Parada { get; set; }
+
+        public AtividadeStatusEnum Status { get; set; }
     }
 }

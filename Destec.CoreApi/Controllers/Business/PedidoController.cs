@@ -75,13 +75,13 @@ namespace Destec.CoreApi.Controllers.Business
             {
                 for (int i = 0; i < item.Quantidade; i++)
                 {
-                    foreach (var atividade in item?.Kit?.TipoAtividades)
+                    foreach (var atividade in item.Kit?.TipoAtividades?.OrderBy(x => x.Ordem))
                     {
                         db.Atividades.Add(new Atividade
                         {
                             PedidoItemId = item.Id,
                             TipoAtividadeId = atividade.Id,
-                            GrupoPedidoId = i,
+                            KitPedidoId = i,
                         });
                     }
                 }
