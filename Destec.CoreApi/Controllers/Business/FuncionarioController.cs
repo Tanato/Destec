@@ -74,13 +74,13 @@ namespace Destec.CoreApi.Controllers.Business
             {
                 if (i.Id == 0)
                 {
-                    item.TarefaAssociadas.Add(new TarefaAssociada { KitId = i.KitId, GrupoKit = i.GrupoKit, FuncionarioId = update.Id });
+                    item.TarefaAssociadas.Add(new TarefaAssociada { KitId = i.KitId, Grupo = i.Grupo, FuncionarioId = update.Id });
                 }
                 else
                 {
                     var atv = item.TarefaAssociadas.Single(x => x.Id == i.Id);
                     atv.KitId = i.KitId;
-                    atv.GrupoKit = i.GrupoKit;
+                    atv.Grupo = i.Grupo;
                 }
             }
 

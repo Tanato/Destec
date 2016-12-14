@@ -22,6 +22,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using Windows.System.Threading;
 using Windows.UI.Core;
+using Windows.Storage;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -36,18 +37,29 @@ namespace Destec.PointApp
         HttpClient httpClient = new HttpClient();
         string urlBase = "http://";
         string server = "localhost";
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
+        int shutdownCount;
+        bool timetosleep;
 
         bool waiting = false;
 
         public MainPage()
         {
             this.InitializeComponent();
+
+            try
+            {
+                server = localSettings.Values["server"].ToString();
+            }
+            catch { }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e.Parameter is string && !string.IsNullOrEmpty(e.Parameter.ToString()))
             {
+                localSettings.Values["server"] = e.Parameter.ToString();
                 server = e.Parameter.ToString();
             }
             base.OnNavigatedTo(e);
@@ -195,6 +207,15 @@ namespace Destec.PointApp
         #region Eventos
         private async void mainInput_KeyDown(object sender, KeyRoutedEventArgs e)
         {
+            if (timetosleep && e.Key != VirtualKey.Separator)
+            {
+                timetosleep = false;
+                shutdownCount = 0;
+                ShutdownManager.CancelShutdown();
+                labelAtividade.Text = "Desligamento cancelado.";
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                labelAtividade.Text = string.Empty;
+            }
             if (waiting)
             {
                 e.Handled = true;
@@ -220,7 +241,7 @@ namespace Destec.PointApp
                     break;
                 case VirtualKey.Enter:
                     e.Handled = true;
-                        await ExecuteActionAsync();
+                    await ExecuteActionAsync();
                     break;
                 //case VirtualKey.PageUp:
                 //    e.Handled = true;
@@ -280,8 +301,10 @@ namespace Destec.PointApp
                 //    break;
                 //case VirtualKey.Add:
                 //    break;
-                //case VirtualKey.Separator:
-                //    break;
+                case VirtualKey.Separator:
+                    e.Handled = true;
+                    shutdown();
+                    break;
                 //case VirtualKey.Subtract:
                 //    break;
                 //case VirtualKey.Decimal:
@@ -298,6 +321,17 @@ namespace Destec.PointApp
                     else
                         e.Handled = true;
                     break;
+            }
+        }
+
+        private void shutdown()
+        {
+            shutdownCount++;
+            if (shutdownCount > 3)
+            {
+                labelAtividade.Text = $"Desligando.{Environment.NewLine}Pressione para cancelar.";
+                timetosleep = true;
+                ShutdownManager.BeginShutdown(ShutdownKind.Shutdown, TimeSpan.FromSeconds(5));
             }
         }
 

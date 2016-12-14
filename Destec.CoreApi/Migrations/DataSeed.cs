@@ -47,7 +47,7 @@ namespace Destec.CoreApi.Migrations
                     AtividadeAtualId = null,
                     TarefaAssociadas = new TarefaAssociada[]
                     {
-                        new TarefaAssociada { KitId = 1, GrupoKit = 1},
+                        new TarefaAssociada { KitId = 1, Grupo = 1},
                     }.ToList(),
                 });
                 context.Funcionarios.Add(new Funcionario
@@ -58,7 +58,7 @@ namespace Destec.CoreApi.Migrations
                     AtividadeAtualId = null,
                     TarefaAssociadas = new TarefaAssociada[]
                     {
-                        new TarefaAssociada { KitId = 1, GrupoKit = 2},
+                        new TarefaAssociada { KitId = 1, Grupo = 2},
                     }.ToList(),
                 });
             }

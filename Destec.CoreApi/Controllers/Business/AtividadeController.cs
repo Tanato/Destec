@@ -16,7 +16,6 @@ namespace Destec.CoreApi.Controllers.Business
     public class AtividadeController : Controller
     {
         private readonly ApplicationDbContext db;
-        private object next;
 
         public AtividadeController(ApplicationDbContext db)
         {
@@ -218,7 +217,7 @@ namespace Destec.CoreApi.Controllers.Business
                               from ta in db.TarefaAssociadas
                               where a.FuncionarioId == null
                                   && a.Status == AtividadeStatusEnum.Criada
-                                  && t.Grupo == ta.GrupoKit
+                                  && t.Grupo == ta.Grupo
                                   && t.KitId == ta.KitId
                                   && ta.FuncionarioId == funcionario.Id
                               orderby a.PedidoItem.PedidoId, a.KitPedidoId, t.Ordem

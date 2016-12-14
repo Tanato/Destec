@@ -5,6 +5,7 @@ import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 import { KitMasterModule, KitDetailModule } from './kit/kit.module';
+import { FuncionarioMasterModule, FuncionarioDetailModule } from './funcionario/funcionario.module';
 
 import { DestecComponent } from './destec.component';
 
@@ -19,6 +20,8 @@ import { SidebarComponent } from '../shared/index';
         ModalModule,
         KitMasterModule,
         KitDetailModule,
+        FuncionarioMasterModule,
+        FuncionarioDetailModule,
     ],
     declarations: [DestecComponent, TopNavComponent, SidebarComponent],
     exports: [DestecComponent, TopNavComponent, SidebarComponent]

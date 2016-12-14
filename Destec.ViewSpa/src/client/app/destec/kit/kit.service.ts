@@ -54,6 +54,24 @@ export class KitService {
             .catch(this.handleError);
     }
 
+    getKitSelect(filterText: string = ''): Observable<string[]> {
+        let params: URLSearchParams = new URLSearchParams();
+        params.set('filter', filterText);
+
+        return this.http.get(this.url + '/kitselect', { search: params })
+            .map(this.handleResult)
+            .catch(this.handleError);
+    }
+
+    getGrupoSelect(filterText: string = ''): Observable<string[]> {
+        let params: URLSearchParams = new URLSearchParams();
+        params.set('filter', filterText);
+
+        return this.http.get(this.url + '/gruposelect', { search: params })
+            .map(this.handleResult)
+            .catch(this.handleError);
+    }
+
     private handleResult(res: Response) {
         let body = res.json();
         return body || {};

@@ -1,0 +1,108 @@
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="row">
+        <div class="col-xl-12">
+            <ol class="breadcrumb">
+                <li><a href="Javascript:void(0);" routerLink="/destec/home">Destec</a>
+                </li>
+                <li><a href="Javascript:void(0);" routerLink="/destec/kit/cadastro">Kit</a>
+                </li>
+                <li class="active">
+                    Registro de Funcionário
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="row col-xl-12">
+        <form role="form" #form="ngForm">
+            <fieldset [disabled]="blockEdit">
+                <div class="row">
+                    <div class="form-group col-lg-4">
+                        <label>Nome do Funcionário:</label>
+                        <input class="form-control" id="nome" [(ngModel)]="model.nome" name="nome" required/>
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label>Status:</label>
+                        <select class="form-control-sm" id="inativo" [(ngModel)]="model.inativo" name="inativo">
+                            <option value="false">Ativo</option>
+                            <option value="true">Inativo</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4">
+                    </div>
+                    <div class="col-lg-2">
+                        <label>&nbsp;</label>
+                        <button [hidden]="!model.id" (click)="liberarUsuario()" class="btn btn-warning btn-block">Liberar Usuario</button>
+                    </div>
+                </div>
+            </fieldset>
+            <br>
+        </form>
+        <form role="formTarefaAssociada" #formTarefaAssociada="ngForm">
+            <div class="card card-block">
+                <fieldset>
+                    <div class="row" [hidden]="blockEdit">
+                        <div class="form-group col-lg-4">
+                            <label>Nome do Kit:</label>
+                            <select class="form-control-sm" id="kitId" [(ngModel)]="tarefaAssociada.kitId" (change)="updateGrupo()" name="kitId" required>
+                                <option *ngFor="let item of range" [ngValue]="item">{{item}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-2">
+                            <label>Grupo de atividade no Kit:</label>
+                            <select class="form-control-sm" id="grupo" [(ngModel)]="tarefaAssociada.grupo" name="grupo" required>
+                                <option *ngFor="let item of range" [ngValue]="item">{{item}}</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 text-center">
+                            <label>&nbsp;</label>
+                            <button class="btn btn-primary btn-block" [disabled]="!formTarefaAssociada.form.valid || !tarefaAssociada.nome" (click)="addAtividade()">
+                                <i class="fa" [class.fa-plus]="formType === 'new'" [class.fa-check]="formType !== 'new'" ></i> Atividade
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+                <br>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-sm">
+                        <thead class="thead-default">
+                            <tr>
+                                <th width="40"></th>
+                                <th>Kit</th>
+                                <th>Grupo de atividade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of model?.tarefaAssociadas" (click)="selectRow(item)">
+                                <td>
+                                    &nbsp;
+                                    <a *ngIf="!model.id" (click)="onDelete(item)"><i class="fa fa-remove"></i></a>
+                                </td>
+                                <td>{{ item.kit.nome }}</td>
+                                <td>{{ item.grupo }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-2">
+                    <label>&nbsp;</label>
+                    <button [hidden]="!blockEdit" (click)="blockEdit = false" class="btn btn-warning btn-block">Editar</button>
+                </div>
+                <div class="form-group col-lg-6">
+                </div>
+                <div class="col-lg-2">
+                    <label>&nbsp;</label>
+                    <button routerLink="/destec/kit/cadastro" class="btn btn-default btn-block">Fechar</button>
+                </div>
+                <div class="col-lg-2">
+                    <label>&nbsp;</label>
+                    <button (click)="save()" [disabled]="!form.form.valid || blockEdit" class="btn btn-primary btn-block">Salvar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
