@@ -18,10 +18,6 @@ using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
 using Windows.Foundation.Metadata;
 using Windows.UI.ViewManagement;
-using System.Runtime.InteropServices;
-using System.Threading;
-using Windows.System.Threading;
-using Windows.UI.Core;
 using Windows.Storage;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -211,7 +207,7 @@ namespace Destec.PointApp
             {
                 timetosleep = false;
                 shutdownCount = 0;
-                ShutdownManager.CancelShutdown();
+                //ShutdownManager.CancelShutdown();
                 labelAtividade.Text = "Desligamento cancelado.";
                 await Task.Delay(TimeSpan.FromSeconds(1));
                 labelAtividade.Text = string.Empty;
@@ -323,6 +319,7 @@ namespace Destec.PointApp
                     break;
             }
         }
+        #endregion
 
         private void shutdown()
         {
@@ -331,7 +328,7 @@ namespace Destec.PointApp
             {
                 labelAtividade.Text = $"Desligando.{Environment.NewLine}Pressione para cancelar.";
                 timetosleep = true;
-                ShutdownManager.BeginShutdown(ShutdownKind.Shutdown, TimeSpan.FromSeconds(5));
+                //ShutdownManager.BeginShutdown(ShutdownKind.Shutdown, TimeSpan.FromSeconds(5));
             }
         }
 
@@ -342,7 +339,6 @@ namespace Destec.PointApp
                 mainInput.Text += v;
             }
         }
-        #endregion
 
         private void mainInput_LostFocus(object sender, RoutedEventArgs e)
         {

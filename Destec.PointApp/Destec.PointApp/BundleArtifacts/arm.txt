@@ -1,2 +1,2 @@
-MainPackage=C:\Users\tanato\Projects\destec\Destec.PointApp\Destec.PointApp\bin\ARM\Release\Destec.PointApp_0.1.0.0_ARM.appx
-SymbolPackage=C:\Users\tanato\Projects\destec\Destec.PointApp\Destec.PointApp\AppPackages\Destec.PointApp_0.1.0.0_Test\Destec.PointApp_0.1.0.0_ARM.appxsym
+MainPackage=C:\Users\tanato\Projects\destec\Destec.PointApp\Destec.PointApp\bin\ARM\Debug\Destec.PointApp_0.1.5.0_ARM_Debug.appx
+SymbolPackage=C:\Users\tanato\Projects\destec\Destec.PointApp\Destec.PointApp\AppPackages\Destec.PointApp_0.1.5.0_Debug_Test\Destec.PointApp_0.1.5.0_ARM_Debug.appxsym
