@@ -145,7 +145,7 @@ namespace Destec.CoreApi.Migrations
 
                     b.Property<int>("FuncionarioId");
 
-                    b.Property<int>("GrupoKit");
+                    b.Property<int>("Grupo");
 
                     b.Property<int>("KitId");
 

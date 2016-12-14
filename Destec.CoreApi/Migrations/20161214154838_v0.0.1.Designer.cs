@@ -8,7 +8,7 @@ using Destec.CoreApi.Models;
 namespace Destec.CoreApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20161212164007_v0.0.1")]
+    [Migration("20161214154838_v0.0.1")]
     partial class v001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -146,7 +146,7 @@ namespace Destec.CoreApi.Migrations
 
                     b.Property<int>("FuncionarioId");
 
-                    b.Property<int>("GrupoKit");
+                    b.Property<int>("Grupo");
 
                     b.Property<int>("KitId");
 

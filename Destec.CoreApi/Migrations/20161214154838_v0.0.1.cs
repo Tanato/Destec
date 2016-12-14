@@ -121,7 +121,7 @@ namespace Destec.CoreApi.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Autoincrement", true),
                     FuncionarioId = table.Column<int>(nullable: false),
-                    GrupoKit = table.Column<int>(nullable: false),
+                    Grupo = table.Column<int>(nullable: false),
                     KitId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
