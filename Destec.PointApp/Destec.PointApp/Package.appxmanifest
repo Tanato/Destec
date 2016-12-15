@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" 
-         xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" 
-         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" 
-         xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10" 
-         IgnorableNamespaces="uap mp iot">
-  <Identity Name="c6b525ce-b020-4d57-bbb0-b474d6bd3c23" Publisher="CN=tanato" Version="0.1.3.0" />
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10" IgnorableNamespaces="uap mp iot">
+  <Identity Name="c6b525ce-b020-4d57-bbb0-b474d6bd3c23" Publisher="CN=tanato" Version="0.1.7.0" />
   <mp:PhoneIdentity PhoneProductId="c6b525ce-b020-4d57-bbb0-b474d6bd3c23" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Destec.PointApp</DisplayName>
@@ -19,10 +15,10 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Destec.PointApp.App">
-      <uap:VisualElements DisplayName="Destec.PointApp" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Destec.PointApp" BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="Destec.PointApp" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Destec.PointApp" BackgroundColor="#6882A7">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#6882a7" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#6882A7" />
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="landscape" />
         </uap:InitialRotationPreference>
@@ -31,6 +27,7 @@
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
+    <Capability Name="privateNetworkClientServer" />
     <iot:Capability Name="systemManagement" />
   </Capabilities>
 </Package>

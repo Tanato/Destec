@@ -1,2 +1,2 @@
-MainPackage=C:\Users\tanato\Projects\destec\Destec.PointApp\Destec.PointApp\bin\x64\Debug\Destec.PointApp_0.1.5.0_x64_Debug.appx
-SymbolPackage=C:\Users\tanato\Projects\destec\Destec.PointApp\Destec.PointApp\AppPackages\Destec.PointApp_0.1.5.0_Debug_Test\Destec.PointApp_0.1.5.0_x64_Debug.appxsym
+MainPackage=C:\Users\tanat\Projects\destec\Destec.PointApp\Destec.PointApp\bin\x64\Release\Destec.PointApp_0.1.7.0_x64.appx
+SymbolPackage=C:\Users\tanat\Projects\destec\Destec.PointApp\Destec.PointApp\AppPackages\Destec.PointApp_0.1.7.0_Test\Destec.PointApp_0.1.7.0_x64.appxsym

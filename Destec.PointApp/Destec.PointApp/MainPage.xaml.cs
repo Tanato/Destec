@@ -193,6 +193,10 @@ namespace Destec.PointApp
                     SetColor(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
                     mode = ModeEnum.Normal;
                     break;
+                case ModeEnum.Consulta:
+                    SetColor(Colors.DeepSkyBlue);
+                    mode = ModeEnum.Normal;
+                    break;
                 default:
                     SetColor(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
                     mode = ModeEnum.Normal;
@@ -203,14 +207,10 @@ namespace Destec.PointApp
         #region Eventos
         private async void mainInput_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (timetosleep && e.Key != VirtualKey.Separator)
+            if (timetosleep && e.Key != VirtualKey.Subtract)
             {
-                timetosleep = false;
-                shutdownCount = 0;
-                //ShutdownManager.CancelShutdown();
-                labelAtividade.Text = "Desligamento cancelado.";
-                await Task.Delay(TimeSpan.FromSeconds(1));
-                labelAtividade.Text = string.Empty;
+                await CancelShutdown(e);
+                return;
             }
             if (waiting)
             {
@@ -239,38 +239,6 @@ namespace Destec.PointApp
                     e.Handled = true;
                     await ExecuteActionAsync();
                     break;
-                //case VirtualKey.PageUp:
-                //    e.Handled = true;
-                //    keyPress(9);
-                //    break;
-                //case VirtualKey.PageDown:
-                //    e.Handled = true;
-                //    keyPress(3);
-                //    break;
-                //case VirtualKey.End:
-                //    e.Handled = true;
-                //    keyPress(1);
-                //    break;
-                //case VirtualKey.Home:
-                //    e.Handled = true;
-                //    keyPress(7);
-                //    break;
-                //case VirtualKey.Left:
-                //    e.Handled = true;
-                //    keyPress(4);
-                //    break;
-                //case VirtualKey.Up:
-                //    e.Handled = true;
-                //    keyPress(8);
-                //    break;
-                //case VirtualKey.Right:
-                //    e.Handled = true;
-                //    keyPress(6);
-                //    break;
-                //case VirtualKey.Down:
-                //    e.Handled = true;
-                //    keyPress(2);
-                //    break;
                 case VirtualKey.Number0:
                 case VirtualKey.Number1:
                 case VirtualKey.Number2:
@@ -297,16 +265,18 @@ namespace Destec.PointApp
                 //    break;
                 //case VirtualKey.Add:
                 //    break;
-                case VirtualKey.Separator:
+                //case VirtualKey.Separator:
+                //    break;
+                case VirtualKey.Subtract:
                     e.Handled = true;
                     shutdown();
                     break;
-                //case VirtualKey.Subtract:
-                //    break;
                 //case VirtualKey.Decimal:
                 //    break;
-                //case VirtualKey.Divide:
-                //    break;
+                case VirtualKey.Divide:
+                    e.Handled = true;
+                    SwitchMode();
+                    break;
                 default:
                     // Ao apertar o botão igual
                     if ((int)e.Key == 187)
@@ -321,14 +291,34 @@ namespace Destec.PointApp
         }
         #endregion
 
+        private async Task CancelShutdown(KeyRoutedEventArgs e)
+        {
+            e.Handled = true;
+            timetosleep = false;
+            shutdownCount = 0;
+            ShutdownManager.CancelShutdown();
+            labelAtividade.Text = "Desligamento cancelado.";
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            labelAtividade.Text = string.Empty;
+            return;
+        }
+
         private void shutdown()
         {
             shutdownCount++;
-            if (shutdownCount > 3)
+            if (shutdownCount >= 5 && !timetosleep)
             {
-                labelAtividade.Text = $"Desligando.{Environment.NewLine}Pressione para cancelar.";
-                timetosleep = true;
-                //ShutdownManager.BeginShutdown(ShutdownKind.Shutdown, TimeSpan.FromSeconds(5));
+                try
+                {
+                    labelAtividade.Text = $"Desligando.{Environment.NewLine}Pressione para cancelar.";
+                    timetosleep = true;
+                    ShutdownManager.BeginShutdown(ShutdownKind.Shutdown, TimeSpan.FromSeconds(5));
+                }
+                catch
+                {
+                    labelAtividade.Text = "";
+                    timetosleep = false;
+                }
             }
         }
 
@@ -350,6 +340,7 @@ namespace Destec.PointApp
     public enum ModeEnum
     {
         Normal,
+        Consulta,
         Intervalo,
         Parada,
     }

@@ -41,10 +41,10 @@ namespace Destec.PointApp
                 var response = await httpClient.GetAsync(new Uri(urlBase + server + ":5000/api/ping"));
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    this.Frame.Navigate(typeof(MainPage), ipInput.Text.Replace(',', '.'));
+                    this.Frame.Navigate(typeof(MainPage), server);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 message.Text = "Ip Inválido!";
             }
@@ -54,8 +54,8 @@ namespace Destec.PointApp
         {
             if (e.Key == VirtualKey.Enter)
             {
-                await Ping(ipInput.Text.Replace(',','.'));
                 e.Handled = true;
+                await Ping(ipInput.Text.Replace(',','.'));
             }
         }
 
