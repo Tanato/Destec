@@ -5,7 +5,9 @@ import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 import { KitMasterModule, KitDetailModule } from './kit/kit.module';
+import { PedidoMasterModule, PedidoDetailModule } from './pedido/pedido.module';
 import { FuncionarioMasterModule, FuncionarioDetailModule } from './funcionario/funcionario.module';
+import { AtividadeMasterModule } from './atividade/atividade.module';
 
 import { DestecComponent } from './destec.component';
 
@@ -22,6 +24,9 @@ import { SidebarComponent } from '../shared/index';
         KitDetailModule,
         FuncionarioMasterModule,
         FuncionarioDetailModule,
+        PedidoMasterModule,
+        PedidoDetailModule,
+        AtividadeMasterModule,
     ],
     declarations: [DestecComponent, TopNavComponent, SidebarComponent],
     exports: [DestecComponent, TopNavComponent, SidebarComponent]

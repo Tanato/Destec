@@ -80,13 +80,12 @@ export class KitDetailComponent implements OnInit {
 
     selectRow(item: TipoAtividade) {
         if (this.formType === 'edit') {
-            this.tipoAtividade = item;
+            this.tipoAtividade = _.cloneDeep(item);
         }
     }
 
     onDelete(item: TipoAtividade) {
-        this.model.tipoAtividades =
-            _.remove(this.model.tipoAtividades, (n: TipoAtividade) => n.nome === item.nome && n.ordem === item.ordem);
+        _.remove(this.model.tipoAtividades, (n: TipoAtividade) => n.nome === item.nome && n.ordem === item.ordem);
     }
 
     onRefresh(id: string) {

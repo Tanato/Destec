@@ -29,6 +29,12 @@ export class FuncionarioService {
             .catch(this.handleError);
     }
 
+    getNewCode(): Observable<string> {
+        return this.http.get(this.url + '/newcode')
+            .map(this.handleResult)
+            .catch(this.handleError);
+    }
+
     postFuncionario(Funcionario: Funcionario) {
         return this.http.post(this.url, Funcionario)
             .map(this.handleResult)

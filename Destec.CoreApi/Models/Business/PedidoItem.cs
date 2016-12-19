@@ -12,6 +12,8 @@ namespace Destec.CoreApi.Models.Business
 
         public int Quantidade { get; set; }
 
+        //public string Cliente { get; set; }
+
         public int KitId { get; set; }
         public Kit Kit { get; set; }
 

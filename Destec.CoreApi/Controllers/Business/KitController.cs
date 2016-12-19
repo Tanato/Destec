@@ -43,12 +43,41 @@ namespace Destec.CoreApi.Controllers.Business
             return Ok(result.ToList());
         }
 
+        [HttpGet]
+        [Route("gruposelect")]
+        public IActionResult GetSelect([FromQuery] int filter = 0)
+        {
+            var result = db.TipoAtividades
+                            .Where(x => filter == 0 || x.KitId == filter)
+                            .Select(x => x.Grupo)
+                            .Distinct()
+                            .OrderBy(x => x);
+
+            return Ok(result.ToList());
+        }
+
+        [HttpGet]
+        [Route("kitselect")]
+        public IActionResult GetSelect()
+        {
+            var result = db.Kits
+                            .Where(x => !x.Inativo)
+                            .Select(x => new Kit
+                            {
+                                Id = x.Id,
+                                Nome = x.Nome,
+                            })
+                            .OrderBy(x => x.Id);
+
+            return Ok(result.ToList());
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var result = db.Kits
                             .Include(x => x.TipoAtividades)
-                            .Single(x => x.Id == id);
+                            .SingleOrDefault(x => x.Id == id);
             return Ok(result);
         }
 

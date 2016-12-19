@@ -7,7 +7,7 @@
 					<a href="Javascript:void(0);" routerLink="/destec/home">Destec</a>
 				</li>
 				<li class="active">
-					Registro de Serviços
+					Registro de Pedidos
 				</li>
 			</ol>
 		</div>
@@ -20,7 +20,7 @@
 			<span class="input-group-btn"><button class="btn btn-secondary" (click)="filter()" type="button"><i class="fa fa-search"></i></button></span>
 		</div>
 		<div class="col-xl-2 text-center">
-			<a class="btn btn-primary" routerLink="/destec/funcionario/detail"><i class="fa fa-plus"></i> Adicionar</a>
+			<a class="btn btn-primary" routerLink="/destec/pedido/detail"><i class="fa fa-plus"></i> Adicionar</a>
 		</div>
 	</div>
 	<div class="row">
@@ -29,10 +29,10 @@
 				<thead>
 					<tr>
 						<th width="50"></th>
-						<th width="100">Código</th>
-						<th>Nome</th>
-						<th width="200">Tarefas Associadas</th>
-						<th width="200">Ativo</th>
+						<th width="200">Nome</th>
+						<th>Descrição</th>
+						<th width="200">% Concluido</th>
+						<th width="200">Cancelado</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -40,12 +40,12 @@
 						<td>
 							&nbsp;
 							&nbsp;
-							<a [routerLink]="['/destec/funcionario/detail', {id: item.id}]"><i class="fa fa-calculator"></i></a> &nbsp;
+							<a [routerLink]="['/destec/pedido/detail', {id: item.id}]"><i class="fa fa-calculator"></i></a> &nbsp;
 						</td>
 						<td>{{ item.codigo }}</td>
-						<td>{{ item.nome }}</td>
-						<td>{{ item.tarefaAssociadas?.length }}</td>
-						<td>{{ item.inativo ? 'Não' : 'Sim' }}</td>
+						<td>{{ item.descricao }}</td>
+						<td>{{ item.conclusao }}</td>
+						<td>{{ item.cancelado ? 'Sim' : 'Não' }}</td>
 					</tr>
 				</tbody>
 			</table>

@@ -83,26 +83,6 @@ namespace Destec.PointApp
             }
         }
 
-        private void SetColor(Color color)
-        {
-            modeBorderLeft.Fill = new SolidColorBrush(color);
-            modeBorderBottom.Fill = new SolidColorBrush(color);
-            modeBorderRight.Fill = new SolidColorBrush(color);
-            modeBorderTop.Fill = new SolidColorBrush(color);
-
-            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
-            {
-                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                if (titleBar != null)
-                {
-                    titleBar.ButtonBackgroundColor = color;
-                    titleBar.ButtonForegroundColor = color;
-                    titleBar.BackgroundColor = color;
-                    titleBar.ForegroundColor = color;
-                }
-            }
-        }
-
         private async Task ExecuteActionAsync()
         {
             if (string.IsNullOrEmpty(mainInput.Text) || mainInput.Text.Length != 3)
@@ -128,6 +108,9 @@ namespace Destec.PointApp
                                 break;
                             case ModeEnum.Parada:
                                 response = await http.PostAsync(new Uri(urlBase + server + ":5000/api/atividade/stop?code=" + mainInput.Text), null);
+                                break;
+                            case ModeEnum.Consulta:
+                                response = await http.PostAsync(new Uri(urlBase + server + ":5000/api/atividade/info?code=" + mainInput.Text), null);
                                 break;
                             default:
                                 break;
@@ -159,6 +142,7 @@ namespace Destec.PointApp
                 statusBall.Fill = new SolidColorBrush(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
                 mainInput.Text = "";
                 labelAtividade.Text = "";
+                SetMode(ModeEnum.Normal);
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
@@ -177,30 +161,69 @@ namespace Destec.PointApp
             }
         }
 
-        private void SwitchMode()
+        private void SwitchMode(ModeEnum? value = null)
         {
             switch (mode)
             {
                 case ModeEnum.Normal:
-                    SetColor(Colors.Yellow);
-                    mode = ModeEnum.Intervalo;
+                    SetMode(ModeEnum.Intervalo);
                     break;
                 case ModeEnum.Intervalo:
-                    SetColor(Colors.Red);
-                    mode = ModeEnum.Parada;
+                    SetMode(ModeEnum.Parada);
                     break;
                 case ModeEnum.Parada:
+                    SetMode(ModeEnum.Normal);
+                    break;
+                case ModeEnum.Consulta:
+                    SetMode(ModeEnum.Normal);
+                    break;
+                default:
+                    SetMode(ModeEnum.Normal);
+                    break;
+            }
+        }
+
+        private void SetMode(ModeEnum mode)
+        {
+            this.mode = mode;
+            switch (mode)
+            {
+                case ModeEnum.Normal:
                     SetColor(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
-                    mode = ModeEnum.Normal;
+                    break;
+                case ModeEnum.Intervalo:
+                    SetColor(Colors.Yellow);
+                    break;
+                case ModeEnum.Parada:
+                    SetColor(Colors.Red);
                     break;
                 case ModeEnum.Consulta:
                     SetColor(Colors.DeepSkyBlue);
-                    mode = ModeEnum.Normal;
                     break;
                 default:
                     SetColor(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
                     mode = ModeEnum.Normal;
                     break;
+            }
+        }
+
+        private void SetColor(Color color)
+        {
+            modeBorderLeft.Fill = new SolidColorBrush(color);
+            modeBorderBottom.Fill = new SolidColorBrush(color);
+            modeBorderRight.Fill = new SolidColorBrush(color);
+            modeBorderTop.Fill = new SolidColorBrush(color);
+
+            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
+            {
+                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                if (titleBar != null)
+                {
+                    titleBar.ButtonBackgroundColor = color;
+                    titleBar.ButtonForegroundColor = color;
+                    titleBar.BackgroundColor = color;
+                    titleBar.ForegroundColor = color;
+                }
             }
         }
 

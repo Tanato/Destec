@@ -27,6 +27,8 @@ namespace Destec.CoreApi.Controllers.Business
                             .Where(x => string.IsNullOrEmpty(filter)
                                              || (!string.IsNullOrEmpty(x.Codigo) && x.Codigo.ContainsIgnoreNonSpacing(filter))
                                              || (!string.IsNullOrEmpty(x.Descricao) && x.Descricao.Contains(filter)))
+                            .OrderBy(x => x.Id)
+                            .ToList()
                             .Select(x => new Pedido
                             {
                                 Id = x.Id,
@@ -39,10 +41,9 @@ namespace Destec.CoreApi.Controllers.Business
                                 {
                                     Id = z.Id,
                                 }).ToList(),
-                            })
-                            .OrderBy(x => x.Id);
+                            });
 
-            return Ok(result.ToList());
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
@@ -50,20 +51,25 @@ namespace Destec.CoreApi.Controllers.Business
         {
             var result = db.Pedidos
                             .Include(x => x.Itens).ThenInclude(x => x.Kit)
-                            .Single(x => x.Id == id);
+                            .SingleOrDefault(x => x.Id == id);
             return Ok(result);
         }
 
         [HttpPost]
         public IActionResult Post([FromBody] Pedido item)
         {
+            foreach (var i in item.Itens)
+            {
+                i.Kit = null;
+            }
+
             db.Pedidos.Add(item);
             db.SaveChanges();
             return Ok(item);
         }
 
         [HttpGet("gerar/{id}")]
-        public IActionResult GerarPedido([FromQuery] int id)
+        public IActionResult GerarPedido(int id)
         {
             var pedido = db.Pedidos
                             .Include(x => x.Itens)

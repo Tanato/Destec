@@ -4,17 +4,16 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Rx';
 import { Config } from '../../shared/config/env.config';
-import { Kit } from './Kit.model';
+import { Atividade } from './Atividade.model';
 
 @Injectable()
-export class KitService {
+export class AtividadeService {
 
-    private url: string = Config.API + 'kit';
-    private pedidoUrl: string = Config.API + 'pedido';
+    private url: string = Config.API + 'atividade';
 
     constructor(private http: Http) { }
 
-    getKits(filterText: string): Observable<Kit[]> {
+    getAtividades(filterText: string): Observable<Atividade[]> {
         let params: URLSearchParams = new URLSearchParams();
         params.set('filter', filterText);
 
@@ -23,48 +22,33 @@ export class KitService {
             .catch(this.handleError);
     }
 
-    getKitById(id: string): Observable<Kit> {
+    getAtividadeById(id: string): Observable<Atividade> {
         return this.http.get(this.url + '/' + id)
             .map(this.handleResult)
             .catch(this.handleError);
     }
 
-    postKit(Kit: Kit) {
-        return this.http.post(this.url, Kit)
+    postAtividade(Atividade: Atividade) {
+        return this.http.post(this.url, Atividade)
             .map(this.handleResult)
             .catch(this.handleError);
     }
 
-    putKit(Kit: Kit) {
+    putAtividade(Atividade: Atividade) {
         return this.http
-            .put(this.url, JSON.stringify(Kit))
+            .put(this.url, JSON.stringify(Atividade))
             .map(this.handleResult)
             .catch(this.handleError);
     }
 
-    deleteKit(id: number) {
+    deleteAtividade(id: number) {
         return this.http.delete(this.url + '/' + id)
             .map(this.handleResult)
             .catch(this.handleError);
     }
 
-    generateKit(kitId: number) {
-        return this.http.get(this.url + '/gerar/' + kitId)
-            .map(this.handleResult)
-            .catch(this.handleError);
-    }
-
-    getKitSelect(): Observable<string[]> {
-        return this.http.get(this.url + '/kitselect')
-            .map(this.handleResult)
-            .catch(this.handleError);
-    }
-
-    getGrupoSelect(filterText: string = ''): Observable<number[]> {
-        let params: URLSearchParams = new URLSearchParams();
-        params.set('filter', filterText);
-
-        return this.http.get(this.url + '/gruposelect', { search: params })
+    generateAtividade(atividadeId: number) {
+        return this.http.get(this.url + '/gerar/' + atividadeId)
             .map(this.handleResult)
             .catch(this.handleError);
     }

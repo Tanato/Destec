@@ -5,7 +5,7 @@
             <ol class="breadcrumb">
                 <li><a href="Javascript:void(0);" routerLink="/destec/home">Destec</a>
                 </li>
-                <li><a href="Javascript:void(0);" routerLink="/destec/kit/cadastro">Kit</a>
+                <li><a href="Javascript:void(0);" routerLink="/destec/funcionario/cadastro">Funcionario</a>
                 </li>
                 <li class="active">
                     Registro de Funcionário
@@ -23,16 +23,22 @@
                     </div>
                     <div class="form-group col-lg-2">
                         <label>Status:</label>
-                        <select class="form-control-sm" id="inativo" [(ngModel)]="model.inativo" name="inativo">
+                        <select class="form-control" id="inativo" [(ngModel)]="model.inativo" name="inativo" required>
                             <option value="false">Ativo</option>
                             <option value="true">Inativo</option>
                         </select>
                     </div>
-                    <div class="col-lg-4">
-                    </div>
                     <div class="col-lg-2">
+                        <label>Código:</label>
+                        <input class="form-control" id="codigo" [(ngModel)]="model.codigo" name="codigo" disabled/>
+                    </div>
+                    <div class="col-lg-2" [hidden]="model.id">
                         <label>&nbsp;</label>
-                        <button [hidden]="!model.id" (click)="liberarUsuario()" class="btn btn-warning btn-block">Liberar Usuario</button>
+                        <button (click)="getCode()" class="btn btn-primary btn-block">Gerar código</button>
+                    </div>
+                    <div class="col-lg-3" [hidden]="!model.id">
+                        <label>&nbsp;</label>
+                        <button (click)="liberarUsuario()" class="btn btn-warning btn-block">Liberar tarefas do funcionário</button>
                     </div>
                 </div>
             </fieldset>
@@ -44,20 +50,33 @@
                     <div class="row" [hidden]="blockEdit">
                         <div class="form-group col-lg-4">
                             <label>Nome do Kit:</label>
-                            <select class="form-control-sm" id="kitId" [(ngModel)]="tarefaAssociada.kitId" (change)="updateGrupo()" name="kitId" required>
-                                <option *ngFor="let item of range" [ngValue]="item">{{item}}</option>
+                            <select class="form-control" id="kitId" [(ngModel)]="tarefaAssociada.kitId" (ngModelChange)="updateGrupo($event)" name="kitId"
+                                required>
+                                <option *ngFor="let item of kits" [ngValue]="item.id">{{item.nome}}</option>
                             </select>
                         </div>
                         <div class="form-group col-lg-2">
-                            <label>Grupo de atividade no Kit:</label>
-                            <select class="form-control-sm" id="grupo" [(ngModel)]="tarefaAssociada.grupo" name="grupo" required>
-                                <option *ngFor="let item of range" [ngValue]="item">{{item}}</option>
+                            <label>Grupo do Kit:</label>
+                            <select class="form-control" id="grupo" [(ngModel)]="tarefaAssociada.grupo" name="grupo" required>
+                                <option *ngFor="let item of grupos | async" [ngValue]="item">{{item}}</option>
                             </select>
                         </div>
                         <div class="col-lg-2 text-center">
                             <label>&nbsp;</label>
-                            <button class="btn btn-primary btn-block" [disabled]="!formTarefaAssociada.form.valid || !tarefaAssociada.nome" (click)="addAtividade()">
-                                <i class="fa" [class.fa-plus]="formType === 'new'" [class.fa-check]="formType !== 'new'" ></i> Atividade
+                            <button type="button" class="btn btn-default btn-block" (click)="cancelChange()">
+                                <i class="fa fa-times" ></i> Cancelar
+                            </button>
+                        </div>
+                        <div class="col-lg-2 text-center" [hidden]="this.tarefaAssociada.id > 0">
+                            <label>&nbsp;</label>
+                            <button type="button" class="btn btn-primary btn-block" [disabled]="!formTarefaAssociada.form.valid || !tarefaAssociada.kitId" (click)="addAtividade()">
+                                <i class="fa fa-plus" ></i> Tarefa
+                            </button>
+                        </div>
+                        <div class="col-lg-2 text-center" [hidden]="!this.tarefaAssociada.id">
+                            <label>&nbsp;</label>
+                            <button type="button" class="btn btn-primary btn-block" (click)="addAtividade()">
+                                <i class="fa fa-check" ></i> Alterar
                             </button>
                         </div>
                     </div>
@@ -77,9 +96,9 @@
                             <tr *ngFor="let item of model?.tarefaAssociadas" (click)="selectRow(item)">
                                 <td>
                                     &nbsp;
-                                    <a *ngIf="!model.id" (click)="onDelete(item)"><i class="fa fa-remove"></i></a>
+                                    <a [hidden]="blockEdit" (click)="onDelete(item)"><i class="fa fa-remove"></i></a>
                                 </td>
-                                <td>{{ item.kit.nome }}</td>
+                                <td>{{ item.kit?.nome }}</td>
                                 <td>{{ item.grupo }}</td>
                             </tr>
                         </tbody>
@@ -96,11 +115,11 @@
                 </div>
                 <div class="col-lg-2">
                     <label>&nbsp;</label>
-                    <button routerLink="/destec/kit/cadastro" class="btn btn-default btn-block">Fechar</button>
+                    <button routerLink="/destec/funcionario/cadastro" class="btn btn-default btn-block">Fechar</button>
                 </div>
                 <div class="col-lg-2">
                     <label>&nbsp;</label>
-                    <button (click)="save()" [disabled]="!form.form.valid || blockEdit" class="btn btn-primary btn-block">Salvar</button>
+                    <button type="button" (click)="save()" [disabled]="!form.form.valid || blockEdit || this.tarefaAssociada.id > 0" class="btn btn-primary btn-block">Salvar</button>
                 </div>
             </div>
         </form>

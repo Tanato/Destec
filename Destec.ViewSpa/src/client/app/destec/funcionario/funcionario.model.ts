@@ -3,9 +3,11 @@ import { Kit } from '../kit/kit.model';
 export class Funcionario {
     id: number;
     nome: string;
+    codigo: string;
     descicao: string;
     inativo: boolean;
-    tarefasAssociadas: TarefaAssociada[];
+    tarefaAssociadas: TarefaAssociada[];
+    tarefaAssociadasToDelete: TarefaAssociada[];
 }
 
 export class TarefaAssociada {

@@ -7,7 +7,7 @@
 					<a href="Javascript:void(0);" routerLink="/destec/home">Destec</a>
 				</li>
 				<li class="active">
-					Registro de Serviços
+					Atividades
 				</li>
 			</ol>
 		</div>
@@ -20,7 +20,7 @@
 			<span class="input-group-btn"><button class="btn btn-secondary" (click)="filter()" type="button"><i class="fa fa-search"></i></button></span>
 		</div>
 		<div class="col-xl-2 text-center">
-			<a class="btn btn-primary" routerLink="/destec/funcionario/detail"><i class="fa fa-plus"></i> Adicionar</a>
+			<!--<a class="btn btn-primary" routerLink="/destec/atividade/detail"><i class="fa fa-plus"></i> Adicionar</a>-->
 		</div>
 	</div>
 	<div class="row">
@@ -28,24 +28,33 @@
 			<table class="table table-hover table-striped table-sm">
 				<thead>
 					<tr>
-						<th width="50"></th>
-						<th width="100">Código</th>
-						<th>Nome</th>
-						<th width="200">Tarefas Associadas</th>
-						<th width="200">Ativo</th>
+						<th width="10"></th>
+						<th width="70">Kit</th>
+						<th width="250">Atividade</th>
+						<th width="70">Ordem</th>
+						<th width="70">Grupo</th>
+						<th width="170">Pedido</th>
+						<th width="70">Kit Id</th>
+						<th>Funcionário</th>
+						<th width="80">Tempo</th>
+						<th width="80">Intervalo</th>
+						<th width="100">Status</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr *ngFor="let item of rows">
 						<td>
-							&nbsp;
-							&nbsp;
-							<a [routerLink]="['/destec/funcionario/detail', {id: item.id}]"><i class="fa fa-calculator"></i></a> &nbsp;
 						</td>
-						<td>{{ item.codigo }}</td>
-						<td>{{ item.nome }}</td>
-						<td>{{ item.tarefaAssociadas?.length }}</td>
-						<td>{{ item.inativo ? 'Não' : 'Sim' }}</td>
+						<td>{{ item.tipoAtividade?.kit?.nome }}</td>
+						<td>{{ item.tipoAtividade?.nome }}</td>
+						<td>{{ item.tipoAtividade?.ordem }}</td>
+						<td>{{ item.tipoAtividade?.grupo }}</td>
+						<td>{{ item.pedidoItem?.pedido?.codigo }}</td>
+						<td>{{ item.kitPedidoId }}</td>
+						<td>{{ item.funcionario?.nome }}</td>
+						<td>{{ item.tempoFormatted }}</td>
+						<td>{{ item.intervaloFormatted }}</td>
+						<td>{{ item.statusDescricao }}</td>
 					</tr>
 				</tbody>
 			</table>

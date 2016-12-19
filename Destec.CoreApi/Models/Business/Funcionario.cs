@@ -26,6 +26,8 @@ namespace Destec.CoreApi.Models.Business
         public Funcionario Funcionario { get; set; }
 
         public int KitId { get; set; }
+        public Kit Kit { get; set; }
+
         public int Grupo { get; set; }
     }
 }
