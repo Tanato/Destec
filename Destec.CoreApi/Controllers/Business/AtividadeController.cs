@@ -26,55 +26,42 @@ namespace Destec.CoreApi.Controllers.Business
         [HttpGet]
         public IActionResult GetAll([FromQuery] string filter)
         {
-            List<string> filterList = new List<string>();
-            List<AtividadeStatusEnum> enumList = new List<AtividadeStatusEnum>();
-            if (!string.IsNullOrEmpty(filter))
-            {
-                filterList = filter.Split(',', ';').ToList();
-
-                if (filterList.Any(x => "execucao".ContainsIgnoreNonSpacing(x)))
-                    enumList.Add(AtividadeStatusEnum.EmExecucao);
-
-                enumList.AddRange(Enum.GetValues(typeof(AtividadeStatusEnum))
-                                       .Cast<AtividadeStatusEnum>()
-                                       .Where(x => filterList.Any(z => z.ContainsIgnoreNonSpacing(EnumHelpers.GetEnumDescription(x)))));
-            }
-
-            var result = db.Atividades
+            var query = db.Atividades
                         .Include(x => x.Funcionario)
                         .Include(x => x.PedidoItem).ThenInclude(x => x.Pedido)
                         .Include(x => x.TipoAtividade).ThenInclude(x => x.Kit)
-                        .ToList()
-                        .Where(x => filterList.Count() == 0
-                                    || (x.Funcionario != null ? filterList.Any(z => x.Funcionario.Nome.ContainsIgnoreNonSpacing(z)) : false)
-                                    || (!string.IsNullOrEmpty(x.PedidoItem.Pedido.Codigo)
-                                        && filterList.Any(z => x.PedidoItem.Pedido.Codigo.ContainsIgnoreNonSpacing(z)))
-                                    || (!string.IsNullOrEmpty(x.TipoAtividade.Nome)
-                                        && filterList.Any(z => x.TipoAtividade.Nome.ContainsIgnoreNonSpacing(z)))
-                                    || (!string.IsNullOrEmpty(x.TipoAtividade.Kit.Nome)
-                                        && filterList.Any(z => x.TipoAtividade.Kit.Nome.ContainsIgnoreNonSpacing(z)))
-                                    || (x.DataInicio != null && filterList.Any(z => DateTime.TryParse(z, out var date) ? date.Date == x.DataInicio.Value.Date : false))
-                                    || (enumList.Count() > 0 && enumList.Any(z => z == x.Status)))
-                        .OrderBy(x => x.PedidoItem.PedidoId).ThenBy(x => x.KitPedidoId).ThenBy(x => x.TipoAtividade.Ordem)
-                        .Select(x => new AtividadeViewModel
-                        {
-                            Id = x.Id,
-                            TipoAtividade = new TipoAtividade { Nome = x.TipoAtividade.Nome, Ordem = x.TipoAtividade.Ordem, Grupo = x.TipoAtividade.Grupo, Kit = new Kit { Nome = x.TipoAtividade.Kit.Nome } },
-                            Funcionario = new Funcionario { Nome = x.Funcionario?.Nome },
-                            PedidoItem = new PedidoItem { Pedido = new Pedido { Codigo = x.PedidoItem.Pedido.Codigo } },
-                            DataInicio = x.DataInicio,
-                            DataFinal = x.DataFinal,
-                            FuncionarioId = x.FuncionarioId,
-                            Intervalo = x.Intervalo,
-                            KitPedidoId = x.KitPedidoId,
-                            Status = x.Status,
-                            StatusDescricao = EnumHelpers.GetEnumDescription(x.Status),
-                            PedidoItemId = x.PedidoItemId,
-                            TipoAtividadeId = x.TipoAtividadeId,
-                            Parada = x.Parada,
-                            IntervaloFormatted = x.Intervalo?.ToString(@"hh\:mm\:ss"),
-                            TempoFormatted = x.DataFinal?.Subtract(x.DataInicio.Value).ToString(@"hh\:mm\:ss")
-                        });
+                        .ToList();
+
+            foreach (var item in GetFilterList(filter))
+            {
+                query = query.Where(x => (x.Funcionario != null ? x.Funcionario.Nome.ContainsIgnoreNonSpacing(item) : false)
+                                      || (!string.IsNullOrEmpty(x.PedidoItem.Pedido.Codigo) && x.PedidoItem.Pedido.Codigo.ContainsIgnoreNonSpacing(item))
+                                      || (!string.IsNullOrEmpty(x.TipoAtividade.Nome) && x.TipoAtividade.Nome.ContainsIgnoreNonSpacing(item))
+                                      || (!string.IsNullOrEmpty(x.TipoAtividade.Kit.Nome) && x.TipoAtividade.Kit.Nome.ContainsIgnoreNonSpacing(item))
+                                      || (x.DataInicio != null && DateTime.TryParse(item, out var date) ? date.Date == x.DataInicio.Value.Date : false)
+                                      || (x.Status.ToString() == item)).ToList();
+            }
+
+            var result = query.OrderBy(x => x.PedidoItem.PedidoId).ThenBy(x => x.KitPedidoId).ThenBy(x => x.TipoAtividade.Ordem)
+                              .Select(x => new AtividadeViewModel
+                              {
+                                  Id = x.Id,
+                                  TipoAtividade = new TipoAtividade { Nome = x.TipoAtividade.Nome, Ordem = x.TipoAtividade.Ordem, Grupo = x.TipoAtividade.Grupo, Kit = new Kit { Nome = x.TipoAtividade.Kit.Nome } },
+                                  Funcionario = new Funcionario { Nome = x.Funcionario?.Nome },
+                                  PedidoItem = new PedidoItem { Pedido = new Pedido { Codigo = x.PedidoItem.Pedido.Codigo } },
+                                  DataInicio = x.DataInicio,
+                                  DataFinal = x.DataFinal,
+                                  FuncionarioId = x.FuncionarioId,
+                                  Intervalo = x.Intervalo,
+                                  KitPedidoId = x.KitPedidoId,
+                                  Status = x.Status,
+                                  StatusDescricao = EnumHelpers.GetEnumDescription(x.Status),
+                                  PedidoItemId = x.PedidoItemId,
+                                  TipoAtividadeId = x.TipoAtividadeId,
+                                  Parada = x.Parada,
+                                  IntervaloFormatted = x.Intervalo?.ToString(@"hh\:mm\:ss"),
+                                  TempoFormatted = x.DataFinal?.Subtract(x.DataInicio.Value).ToString(@"hh\:mm\:ss")
+                              }).ToList();
 
             return Ok(result);
         }
@@ -356,6 +343,27 @@ namespace Destec.CoreApi.Controllers.Business
 
             // Return Ok to user
             return "Intervalo iniciado.";
+        }
+
+        private static List<string> GetFilterList(string filter)
+        {
+            List<string> filterList = new List<string>();
+            if (!string.IsNullOrEmpty(filter))
+            {
+                foreach (var item in filter.Split(',', ';').Select(x => x.Trim()))
+                {
+                    var e = Enum.GetValues(typeof(AtividadeStatusEnum))
+                                       .Cast<AtividadeStatusEnum>()
+                                       .Where(x => x.GetEnumDescription().ContainsIgnoreNonSpacing(item))
+                                       .Select(x => x.ToString());
+                    if (e.Count() > 0)
+                        filterList.AddRange(e);
+                    else
+                        filterList.Add(item);
+                }
+            }
+
+            return filterList;
         }
     }
 }
