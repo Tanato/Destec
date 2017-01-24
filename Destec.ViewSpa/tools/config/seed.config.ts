@@ -337,6 +337,7 @@ export class SeedConfig {
       '@angular/platform-browser-dynamic/testing':
       'node_modules/@angular/platform-browser-dynamic/bundles/platform-browser-dynamic-testing.umd.js',
       '@angular/router/testing': 'node_modules/@angular/router/bundles/router-testing.umd.js',
+      'angular2-busy': 'node_modules/angular2-busy',
 
       'lodash': 'node_modules/lodash/lodash.js',
       'angular2-text-mask': 'node_modules/angular2-text-mask/dist/angular2TextMask.js',
@@ -426,6 +427,10 @@ export class SeedConfig {
       },
       'angular2-text-mask': {
         main: 'dist/angular2TextMask.js',
+        defaultExtension: 'js'
+      },
+      'angular2-busy': {
+        main: './index.js',
         defaultExtension: 'js'
       }
     }

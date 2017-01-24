@@ -38,6 +38,8 @@ namespace Destec.PointApp
         int shutdownCount;
         bool timetosleep;
 
+        string ajudaFuncionarioCode;
+
         bool waiting = false;
 
         public MainPage()
@@ -87,9 +89,7 @@ namespace Destec.PointApp
         {
             if (string.IsNullOrEmpty(mainInput.Text) || mainInput.Text.Length != 3)
             {
-                labelAtividade.Text = "Código Inválido!";
-                mainInput.Text = string.Empty;
-                return;
+                ResetView(string.IsNullOrEmpty(ajudaFuncionarioCode) ? "Código Inválido!" : string.Empty);
             }
             else
             {
@@ -109,8 +109,13 @@ namespace Destec.PointApp
                             case ModeEnum.Parada:
                                 response = await http.PostAsync(new Uri(urlBase + server + ":5000/api/atividade/stop?code=" + mainInput.Text), null);
                                 break;
-                            case ModeEnum.Consulta:
-                                response = await http.PostAsync(new Uri(urlBase + server + ":5000/api/atividade/info?code=" + mainInput.Text), null);
+                            case ModeEnum.Ajuda:
+                                {
+                                    if (!string.IsNullOrEmpty(ajudaFuncionarioCode))
+                                        response = await http.PostAsync(new Uri(urlBase + server + ":5000/api/atividade/help?code=" + mainInput.Text + "&ajudaCode=" + ajudaFuncionarioCode), null);
+                                    else
+                                        response = await http.GetAsync(new Uri(urlBase + server + ":5000/api/atividade/help?code=" + mainInput.Text));
+                                }
                                 break;
                             default:
                                 break;
@@ -121,44 +126,71 @@ namespace Destec.PointApp
                 }
                 catch (Exception)
                 {
-                    labelAtividade.Text = "Erro ao executar requisição de Atividade";
-                    mainInput.Text = string.Empty;
+                    ResetView("Erro ao executar requisição de Atividade");
                 }
             }
         }
 
         private async Task HandleResponseAsync(HttpResponseMessage response)
         {
-            if (response != null && response.StatusCode == HttpStatusCode.Ok)
+            if (response != null)
             {
-                labelAtividade.Text = response?.Content?.ToString();
-                waiting = true;
-                statusBall.Fill = new SolidColorBrush(Colors.Green);
-                if (response.Content != null && response.Content.ToString().Equals("Intervalo iniciado."))
-                    await Task.Delay(TimeSpan.FromMilliseconds(1400));
-                else
-                    await Task.Delay(TimeSpan.FromMilliseconds(3200));
-                waiting = false;
-                statusBall.Fill = new SolidColorBrush(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
-                mainInput.Text = "";
-                labelAtividade.Text = "";
-                SetMode(ModeEnum.Normal);
-            }
-            else if (response.StatusCode == HttpStatusCode.BadRequest)
-            {
-                labelAtividade.Text = response?.Content?.ToString();
-                waiting = true;
-                statusBall.Fill = new SolidColorBrush(Colors.Red);
-                await Task.Delay(TimeSpan.FromSeconds(1));
-                waiting = false;
-                statusBall.Fill = new SolidColorBrush(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
-                mainInput.Text = "";
-                labelAtividade.Text = "";
+                SetViewResponse(response?.Content?.ToString(), response?.StatusCode == HttpStatusCode.Ok);
+                await WaitShowAsync(response);
+                ResetView();
             }
             else
             {
                 throw new Exception();
             }
+        }
+
+        private async Task WaitShowAsync(HttpResponseMessage response)
+        {
+            if (response.StatusCode == HttpStatusCode.Ok)
+            {
+                if (response.Content != null && response.Content.ToString().Equals("Intervalo iniciado."))
+                {
+                    // Fluxo de intervalo
+                    await Task.Delay(TimeSpan.FromMilliseconds(1400));
+                }
+                else if (mode == ModeEnum.Ajuda) 
+                {
+                    // Fluxo de ajuda, aguarda mais tempo para inserção de ajudante
+                    waiting = false;
+                    ajudaFuncionarioCode = mainInput.Text;
+                    mainInput.Text = string.Empty;
+                    await Task.Delay(TimeSpan.FromMilliseconds(5000));
+                }
+                else
+                {
+                    // Fluxo padrão de execução
+                    await Task.Delay(TimeSpan.FromMilliseconds(2500));
+                }
+            }
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(1));
+            }
+        }
+
+        private void SetViewResponse(string message, bool isOk = true)
+        {
+            waiting = true;
+            labelTarefa.Visibility = isOk ? Visibility.Visible : Visibility.Collapsed;
+            labelAtividade.Text = message;
+            statusBall.Fill = new SolidColorBrush(isOk ? Colors.Green : Colors.Red);
+        }
+
+        private void ResetView(string message = "")
+        {
+            waiting = false;
+            ajudaFuncionarioCode = string.Empty;
+            statusBall.Fill = new SolidColorBrush(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
+            mainInput.Text = "";
+            labelTarefa.Visibility = Visibility.Collapsed;
+            labelAtividade.Text = message;
+            SetMode(ModeEnum.Normal);
         }
 
         private void SwitchMode(ModeEnum? value = null)
@@ -172,9 +204,9 @@ namespace Destec.PointApp
                     SetMode(ModeEnum.Parada);
                     break;
                 case ModeEnum.Parada:
-                    SetMode(ModeEnum.Normal);
+                    SetMode(ModeEnum.Ajuda);
                     break;
-                case ModeEnum.Consulta:
+                case ModeEnum.Ajuda:
                     SetMode(ModeEnum.Normal);
                     break;
                 default:
@@ -197,7 +229,7 @@ namespace Destec.PointApp
                 case ModeEnum.Parada:
                     SetColor(Colors.Red);
                     break;
-                case ModeEnum.Consulta:
+                case ModeEnum.Ajuda:
                     SetColor(Colors.DeepSkyBlue);
                     break;
                 default:
@@ -359,11 +391,10 @@ namespace Destec.PointApp
         }
     }
 
-
     public enum ModeEnum
     {
         Normal,
-        Consulta,
+        Ajuda,
         Intervalo,
         Parada,
     }

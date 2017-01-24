@@ -16,6 +16,7 @@ namespace Destec.CoreApi.Models.Business
         public List<TarefaAssociada> TarefaAssociadas { get; set; }
 
         public int? AtividadeAtualId { get; set; }
+        public int? AtividadeAjudaId { get; set; }
     }
 
     public class TarefaAssociada

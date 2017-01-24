@@ -1,0 +1,53 @@
+<div class="container-fluid">
+	<!-- Page Heading -->
+	<div class="row">
+		<div class="col-xl-12">
+			<ol class="breadcrumb">
+				<li>
+					<a href="Javascript:void(0);" routerLink="/destec/home">Destec</a>
+				</li>
+				<li class="active">
+					Atividades em execução
+				</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xl-10"></div>
+		<div class="col-xl-2 text-center">
+			<button class="form-control btn btn-primary" (click)="filter()">Atualizar</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="table-responsive">
+			<table class="table table-hover table-striped table-sm">
+				<thead>
+					<tr>
+						<th width="20"></th>
+						<th width="75">Kit</th>
+						<th width="250">Atividade</th>
+						<th width="120">Pedido</th>
+						<th width="80">Numero Kit</th>
+						<th>Funcionário</th>
+						<th width="80">Tempo Estimado</th>
+						<th width="80">Tempo</th>
+						<th width="80">Intervalo</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let item of data">
+						<td></td>
+						<td>{{ item.tipoAtividade?.kit?.nome }}</td>
+						<td>{{ item.tipoAtividade?.nome }}</td>
+						<td>{{ item.pedidoItem?.pedido?.codigo }}</td>
+						<td>{{ item.kitPedidoId }}</td>
+						<td>{{ item.funcionario?.nome }} <br *ngIf="item.inAjuda"/> {{ item.inAjuda ? 'Ajudante: '+ item.ajudante?.nome : '' }}</td>
+						<td>{{ item.tipoAtividade?.tempoEstimado.startsWith('00:') ? ( item.tipoAtividade?.tempoEstimado | slice:3 ) : item.tipoAtividade?.tempoEstimado }}</td>
+						<td> <label [ngClass]="{'clock-warning': tempoEstourado(item)} 	"> {{ item.tempoTimer }} </label> </td>
+						<td>{{ item.intervaloTimer }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

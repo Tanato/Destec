@@ -32,7 +32,7 @@
 						<th width="200">Nome</th>
 						<th>Descrição</th>
 						<th width="200">% Concluido</th>
-						<th width="200">Cancelado</th>
+						<th width="200">Status</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -45,7 +45,7 @@
 						<td>{{ item.codigo }}</td>
 						<td>{{ item.descricao }}</td>
 						<td>{{ item.conclusao }}</td>
-						<td>{{ item.cancelado ? 'Sim' : 'Não' }}</td>
+						<td>{{ service.getPedidoStatusDescription(item.status) }}</td>
 					</tr>
 				</tbody>
 			</table>

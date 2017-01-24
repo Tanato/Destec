@@ -13,12 +13,18 @@ namespace Destec.CoreApi.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.1");
+                .HasAnnotation("ProductVersion", "1.0.0-rtm-21431");
 
             modelBuilder.Entity("Destec.CoreApi.Models.Business.Atividade", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<TimeSpan?>("Ajuda");
+
+                    b.Property<DateTime?>("AjudaFrom");
+
+                    b.Property<int?>("AjudanteId");
 
                     b.Property<DateTime?>("DataFinal");
 
@@ -44,6 +50,8 @@ namespace Destec.CoreApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AjudanteId");
+
                     b.HasIndex("FuncionarioId");
 
                     b.HasIndex("KitPedidoId");
@@ -61,6 +69,8 @@ namespace Destec.CoreApi.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("AtividadeAjudaId");
 
                     b.Property<int?>("AtividadeAtualId");
 
@@ -85,6 +95,8 @@ namespace Destec.CoreApi.Migrations
 
                     b.Property<string>("Descricao");
 
+                    b.Property<string>("ExternalCode");
+
                     b.Property<bool>("Inativo");
 
                     b.Property<string>("Nome");
@@ -108,6 +120,8 @@ namespace Destec.CoreApi.Migrations
                     b.Property<string>("Descricao");
 
                     b.Property<DateTime?>("Prazo");
+
+                    b.Property<int>("Status");
 
                     b.HasKey("Id");
 
@@ -153,6 +167,8 @@ namespace Destec.CoreApi.Migrations
 
                     b.HasIndex("FuncionarioId");
 
+                    b.HasIndex("KitId");
+
                     b.ToTable("TarefaAssociadas");
                 });
 
@@ -160,6 +176,8 @@ namespace Destec.CoreApi.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Deleted");
 
                     b.Property<short>("Grupo");
 
@@ -364,6 +382,10 @@ namespace Destec.CoreApi.Migrations
 
             modelBuilder.Entity("Destec.CoreApi.Models.Business.Atividade", b =>
                 {
+                    b.HasOne("Destec.CoreApi.Models.Business.Funcionario", "Ajudante")
+                        .WithMany()
+                        .HasForeignKey("AjudanteId");
+
                     b.HasOne("Destec.CoreApi.Models.Business.Funcionario", "Funcionario")
                         .WithMany()
                         .HasForeignKey("FuncionarioId");
@@ -397,6 +419,11 @@ namespace Destec.CoreApi.Migrations
                     b.HasOne("Destec.CoreApi.Models.Business.Funcionario", "Funcionario")
                         .WithMany("TarefaAssociadas")
                         .HasForeignKey("FuncionarioId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Destec.CoreApi.Models.Business.Kit", "Kit")
+                        .WithMany()
+                        .HasForeignKey("KitId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

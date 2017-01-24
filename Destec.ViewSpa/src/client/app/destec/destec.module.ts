@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 
+import { UsuarioMasterModule, UsuarioDetailModule, UsuarioAlterarSenhaModule } from './usuario/usuario.module';
 import { KitMasterModule, KitDetailModule } from './kit/kit.module';
 import { PedidoMasterModule, PedidoDetailModule } from './pedido/pedido.module';
 import { FuncionarioMasterModule, FuncionarioDetailModule } from './funcionario/funcionario.module';
@@ -27,6 +28,9 @@ import { SidebarComponent } from '../shared/index';
         PedidoMasterModule,
         PedidoDetailModule,
         AtividadeMasterModule,
+        UsuarioMasterModule,
+        UsuarioDetailModule,
+        UsuarioAlterarSenhaModule,
     ],
     declarations: [DestecComponent, TopNavComponent, SidebarComponent],
     exports: [DestecComponent, TopNavComponent, SidebarComponent]

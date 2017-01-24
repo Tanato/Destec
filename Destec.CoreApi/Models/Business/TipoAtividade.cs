@@ -20,5 +20,7 @@ namespace Destec.CoreApi.Models.Business
         public decimal? Pontos { get; set; }
 
         public List<Atividade> Atividades { get; set; }
+
+        public bool Deleted { get; set; }
     }
 }

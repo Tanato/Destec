@@ -11,7 +11,11 @@ namespace Destec.CoreApi.Models.Business
         public string Nome { get; set; }
         public string Descricao { get; set; }
 
+        //public int? Versao { get; set; }
+
         public bool Inativo { get; set; }
+
+        public string ExternalCode { get; set; }
 
         public List<TipoAtividade> TipoAtividades { get; set; }
     }

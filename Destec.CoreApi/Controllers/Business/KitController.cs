@@ -33,7 +33,7 @@ namespace Destec.CoreApi.Controllers.Business
                                 Nome = x.Nome,
                                 Descricao = x.Descricao,
                                 Inativo = x.Inativo,
-                                TipoAtividades = x.TipoAtividades.Select(z => new TipoAtividade
+                                TipoAtividades = x.TipoAtividades.Where(t => !t.Deleted).Select(z => new TipoAtividade
                                 {
                                     Id = z.Id,
                                 }).ToList(),
@@ -77,41 +77,115 @@ namespace Destec.CoreApi.Controllers.Business
         {
             var result = db.Kits
                             .Include(x => x.TipoAtividades)
+                            .Select(s => new Kit
+                            {
+                                Id = s.Id,
+                                Descricao = s.Descricao,
+                                ExternalCode = s.ExternalCode,
+                                Nome = s.Nome,
+                                TipoAtividades = s.TipoAtividades.Where(t => !t.Deleted).OrderBy(x => x.Grupo).ThenBy(x => x.Ordem).ToList(),
+                                Inativo = s.Inativo
+                            })
                             .SingleOrDefault(x => x.Id == id);
+
             return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Kit item)
+        public IActionResult Post([FromBody] Kit model)
         {
-            db.Kits.Add(item);
-            db.SaveChanges();
-            return Ok(item);
+            if (model != null && model.Id == 0)
+            {
+                db.Kits.Add(model);
+                db.SaveChanges();
+            }
+            return Ok(model);
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Kit update)
+        public IActionResult Put([FromBody] Kit model)
         {
-            var item = db.Kits
-                        .Include(x => x.TipoAtividades)
-                        .Single(x => x.Id == update.Id);
-
-            item.Nome = update.Nome;
-            item.Descricao = update.Descricao;
-            item.Inativo = update.Inativo;
-
-            foreach (var i in update.TipoAtividades)
+            if (model != null)
             {
-                var atv = item.TipoAtividades.Single(x => x.Id == i.Id);
-                atv.Nome = i.Nome;
-                atv.Ordem = i.Ordem;
-                atv.Pontos = i.Pontos;
-                atv.Grupo = i.Grupo;
-                atv.TempoEstimado = i.TempoEstimado;
+                var item = db.Kits
+                            .Include(x => x.TipoAtividades)
+                            .Single(x => x.Id == model.Id);
+
+                item.Nome = model.Nome;
+                item.Descricao = model.Descricao;
+                item.Inativo = model.Inativo;
+                //item.Versao++;
+
+                foreach (var i in model.TipoAtividades)
+                {
+                    var atv = item.TipoAtividades.SingleOrDefault(x => x.Id == i.Id);
+                    if (atv != null)
+                    {
+                        atv.Nome = i.Nome;
+                        atv.Ordem = i.Ordem;
+                        atv.Pontos = i.Pontos;
+                        atv.Grupo = i.Grupo;
+                        atv.TempoEstimado = i.TempoEstimado;
+                        atv.Deleted = atv.Deleted;
+                    }
+                }
+
+                var atividadesAdicionar = model.TipoAtividades.Where(x => !item.TipoAtividades.Any(y => y.Id == x.Id));
+                item.TipoAtividades.AddRange(atividadesAdicionar);
+
+                foreach (var atv in item.TipoAtividades.Where(x => !model.TipoAtividades.Any(z => z.Id == x.Id)))
+                    atv.Deleted = true;
+
+                db.SaveChanges();
+
+
+                AtualizaPedidos(model);
+
+                return Ok(item);
+            }
+            else
+                return BadRequest("model is null");
+        }
+
+        private void AtualizaPedidos(Kit kit)
+        {
+            var pedidoItens = db.PedidoItems
+                            .Include(x => x.Pedido)
+                            .Include(x => x.Atividades)
+                            .Where(x => x.Pedido.Status == StatusEnum.Gerado
+                                       && x.KitId == kit.Id
+                                       && x.Atividades.Any(a => a.Status == AtividadeStatusEnum.Criada
+                                                             || a.Status == AtividadeStatusEnum.Alocada));
+            foreach (var item in pedidoItens)
+            {
+                foreach (var pedidoKit in item.Atividades.GroupBy(x => x.KitPedidoId))
+                {
+                    if (pedidoKit.Any() && pedidoKit.All(x => x.Status == AtividadeStatusEnum.Criada || x.Status == AtividadeStatusEnum.Alocada))
+                    {
+                        var atividadeInicialKit = pedidoKit.First();
+
+                        foreach (var atividadeKit in kit.TipoAtividades.Where(x => !x.Deleted).OrderBy(x => x.Grupo).ThenBy(x => x.Ordem))
+                        {
+                            var atv = pedidoKit.SingleOrDefault(x => x.TipoAtividadeId == atividadeKit.Id);
+                            if (atv == null)
+                            {
+                                db.Atividades.Add(new Atividade
+                                {
+                                    PedidoItemId = atividadeInicialKit.PedidoItemId,
+                                    TipoAtividadeId = atividadeKit.Id,
+                                    KitPedidoId = atividadeInicialKit.KitPedidoId,
+                                    Status = AtividadeStatusEnum.Criada,
+                                });
+                            }
+                        }
+
+                        // Remove todas as atividades que foram exluidas do kit;
+                        item.Atividades.RemoveAll(x => !kit.TipoAtividades.Any(z => z.Id == x.TipoAtividadeId) && x.KitPedidoId == atividadeInicialKit.KitPedidoId);
+                        db.SaveChanges();
+                    }
+                }
             }
 
-            db.SaveChanges();
-            return Ok(item);
         }
 
         [HttpDelete("{id}")]

@@ -26,6 +26,12 @@ namespace Destec.CoreApi.Models.Business
         public DateTime? ParadaFrom { get; set; }
         public TimeSpan? Parada { get; set; }
 
+        public int? AjudanteId { get; set; }
+        public Funcionario Ajudante { get; set; }
+
+        public DateTime? AjudaFrom { get; set; }
+        public TimeSpan? Ajuda { get; set; }
+
         public AtividadeStatusEnum Status { get; set; }
     }
 }

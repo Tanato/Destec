@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { AtividadeMasterComponent } from './atividade.master.component';
-//import { AtividadeDetailComponent } from './atividade.detail.component';
+import { AtividadeExecucaoComponent } from './atividade.execucao.component';
 
 import { AtividadeService } from './atividade.service';
 
@@ -23,16 +23,7 @@ let options: any = {
     imports: [CommonModule, PaginationModule, RouterModule, TextMaskModule,
         ModalModule, ToastModule.forRoot(options), SelectModule],
     providers: [AtividadeService],
-    declarations: [AtividadeMasterComponent],
-    exports: [AtividadeMasterComponent]
+    declarations: [AtividadeMasterComponent, AtividadeExecucaoComponent],
+    exports: [AtividadeMasterComponent, AtividadeExecucaoComponent]
 })
 export class AtividadeMasterModule { }
-
-// @NgModule({
-//     imports: [CommonModule, PaginationModule, RouterModule, TextMaskModule,
-//         ModalModule, ToastModule.forRoot(options), SelectModule, Ng2AutoCompleteModule],
-//     providers: [AtividadeService],
-//     declarations: [AtividadeDetailComponent],
-//     exports: [AtividadeDetailComponent]
-// })
-// export class AtividadeDetailModule { }

@@ -93,7 +93,7 @@
                             <tr *ngFor="let item of model?.tipoAtividades" (click)="selectRow(item)">
                                 <td>
                                     &nbsp;
-                                    <a *ngIf="!model.id" (click)="onDelete(item)"><i class="fa fa-remove"></i></a>
+                                    <a *ngIf="!blockEdit" (click)="onDelete(item)"><i class="fa fa-remove"></i></a>
                                 </td>
                                 <td>{{ item.nome }}</td>
                                 <td>{{ item.ordem }}</td>

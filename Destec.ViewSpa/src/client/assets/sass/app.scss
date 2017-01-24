@@ -54,6 +54,11 @@ textarea {
   border-left: 5px solid #a94442; /* red */
 }
 
+.clock-warning {
+    color: red;
+    font-weight: bold;
+}
+
 .sidebar{
     line-height: 1.2;
     width: 240px;
@@ -62,7 +67,16 @@ textarea {
 }
 
 .main-container{
-    margin-left: 230px;
+    margin-left: 240px;
+    margin-top: 60px;
+    padding-left: 0px;
+}
+
+@media screen and (max-width: 768px) {
+    .main-container{
+    margin-left: 15px;
+    padding-left: 0px;
+}
 }
 
 .pagination-sm{

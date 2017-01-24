@@ -1,0 +1,56 @@
+<div class="container-fluid">
+	<!-- Page Heading -->
+	<div class="row">
+		<div class="col-xl-12">
+			<ol class="breadcrumb">
+				<li><a href="Javascript:void(0);" routerLink="/destec/home">Destec</a>
+				</li>
+				<li class="active">
+					Alterar Senha
+				</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row col-xl-12">
+		<form role="form" ng-submit="onSubmit()" #form="ngForm">
+			<fieldset>
+
+				<div class="row">
+					<div class="form-group col-lg-4">
+						<label>Senha Atual:</label>
+						<input class="form-control" type="password" id="currentPassword" [(ngModel)]="model.currentPassword" name="currentPassword" required/>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="form-group col-lg-4">
+						<label>Nova Senha:</label>
+						<input validateEqual="confirmPassword" reverse="true" class="form-control" type="password" id="newPassword" [(ngModel)]="model.newPassword"
+							name="newPassword" required/>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="form-group col-lg-4">
+						<label>Confirmar Senha:</label>
+						<input validateEqual="newPassword" reverse="false" class="form-control" type="password" id="confirmPassword" [(ngModel)]="model.confirmPassword" #confirmPassword="ngModel"
+							name="confirmPassword" required/>
+						<small [hidden]="confirmPassword.valid || (confirmPassword.pristine)" class="text-danger">
+							Senhas imcompatíveis.
+						</small>
+					</div>
+				</div>
+			</fieldset>
+			<hr class="col.lg.4">
+
+			<div class="row">
+				<div class="col-lg-2">
+					<button (click)="onCancel()" class="btn btn-default btn-block">Cancelar</button>
+				</div>
+				<div class="col-lg-2">
+					<button (click)="onSubmit()" [disabled]="!form.form.valid" class="btn btn-primary btn-block">Salvar</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

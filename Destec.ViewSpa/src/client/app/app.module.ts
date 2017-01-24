@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { routes } from './app.routes';
 import { AuthHttp } from './auth.http';
 import { TopnavService } from './shared/topnav/topnav.service';
+import { BusyModule, BusyConfig } from 'angular2-busy';
 
 import { LoginModule } from './login/login.module';
 import { SignupModule } from './signup/signup.module';
@@ -18,6 +19,10 @@ export function httpFactory(backend: XHRBackend, defaultOptions: RequestOptions,
 	return new AuthHttp(backend, defaultOptions, router);
 }
 
+var busyConfig = new BusyConfig({
+	message: 'Aguarde...',
+});
+
 @NgModule({
 	imports: [
 		BrowserModule,
@@ -27,7 +32,8 @@ export function httpFactory(backend: XHRBackend, defaultOptions: RequestOptions,
 		LoginModule,
 		SignupModule,
 		DestecModule,
-		SharedModule.forRoot()
+		SharedModule.forRoot(),
+		BusyModule.forRoot(busyConfig),
 	],
 	declarations: [AppComponent],
 	providers: [{

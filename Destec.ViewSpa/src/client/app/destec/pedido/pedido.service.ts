@@ -53,6 +53,12 @@ export class PedidoService {
             .catch(this.handleError);
     }
 
+    cancelPedido(pedidoId: number) {
+        return this.http.get(this.url + '/cancelar/' + pedidoId)
+            .map(this.handleResult)
+            .catch(this.handleError);
+    }
+
     getPedidoSelect(): Observable<string[]> {
         return this.http.get(this.url + '/pedidoselect')
             .map(this.handleResult)
@@ -75,6 +81,24 @@ export class PedidoService {
         return this.http.get(this.url + '/clientes', { search: params })
             .map(this.handleResult)
             .catch(this.handleError);
+    }
+
+    getPedidoStatusDescription(status: number) {
+
+        switch (status) {
+            case 0:
+                return 'Criado';
+            case 1:
+                return 'Gerando';
+            case 2:
+                return 'Gerado';
+            case 3:
+                return 'Cancelado';
+            case 4:
+                return 'Finalizado';
+            default:
+                return '';
+        }
     }
 
     private handleResult(res: Response) {

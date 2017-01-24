@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" [ngBusy]="busy">
     <!-- Page Heading -->
     <div class="row">
         <div class="col-xl-12">
@@ -44,8 +44,12 @@
                     </div>
                     <div class="form-group col-lg-2">
                         <label>Status:</label>
-                        <select class="form-control-sm" id="cancelado" [(ngModel)]="model.cancelado" name="cancelado" disabled>
-                            <option value="true">Cancelado</option>
+                        <select class="form-control" id="status" [(ngModel)]="model.status" name="status" disabled>
+                            <option value="0">Criado</option>
+                            <option value="1">Gerando</option>
+                            <option value="2">Gerado</option>
+                            <option value="3">Cancelado</option>
+                            <option value="4">Finalizado</option>
                         </select>
                     </div>
                 </div>
@@ -80,7 +84,7 @@
                         <div class="col-lg-2 text-center" [hidden]="this.pedidoItem.id > 0">
                             <label>&nbsp;</label>
                             <button type="button" class="btn btn-primary btn-block" [disabled]="!formPedidoItem.form.valid || !pedidoItem.kitId" (click)="addItem()">
-                                <i class="fa fa-plus" ></i> Tarefa
+                                <i class="fa fa-plus" ></i> Kit
                             </button>
                         </div>
                         <div class="col-lg-2 text-center" [hidden]="!this.pedidoItem.id">
@@ -125,15 +129,19 @@
             <div class="row">
                 <div class="col-lg-2">
                     <label>&nbsp;</label>
-                    <button [hidden]="!blockEdit" (click)="blockEdit = false" class="btn btn-warning btn-block">Editar</button>
+                    <button [hidden]="!blockEdit || model.status !== 0" (click)="blockEdit = false" class="btn btn-warning btn-block">Editar</button>
                 </div>
-                <div class="form-group col-lg-2">
+                <div class="form-group col-lg-1">
                 </div>
                 <div class="col-lg-2">
                     <label>&nbsp;</label>
-                    <button [hidden]="!model.id" (click)="gerarPedido()" class="btn btn-warning btn-block">Gerar</button>
+                    <button [hidden]="!model.id || !blockEdit || model.status !== 2" (click)="cancelarPedido()" class="btn btn-error btn-block">Cancelar Pedido</button>
                 </div>
-                <div class="form-group col-lg-2">
+                <div class="col-lg-2">
+                    <label>&nbsp;</label>
+                    <button [hidden]="!model.id || !blockEdit || model.status !== 0 || model.itens.length === 0" (click)="gerarPedido()" class="btn btn-warning btn-block">Gerar</button>
+                </div>
+                <div class="form-group col-lg-1">
                 </div>
                 <div class="col-lg-2">
                     <label>&nbsp;</label>

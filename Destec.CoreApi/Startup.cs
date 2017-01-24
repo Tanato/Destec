@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Steeltoe.Extensions.Configuration;
 using System;
+using System.Diagnostics;
 using System.IO.Compression;
 using System.Net;
 using System.Threading.Tasks;
@@ -87,8 +88,8 @@ namespace Destec.CoreApi
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            app.EnsureSeedIdentityAsync();
-
+            app.UseDeveloperExceptionPage();
+            
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -96,8 +97,16 @@ namespace Destec.CoreApi
 
             app.UseIdentity();
 
-            app.UseExceptionHandler();
-            app.UseMvc();
+            app.UseStaticFiles();
+
+            app.EnsureSeedIdentityAsync();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
 
             app.UseSwagger();
             app.UseSwaggerUi();

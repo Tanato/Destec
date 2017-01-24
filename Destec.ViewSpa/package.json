@@ -1,9 +1,9 @@
 {
-  "name": "Calcular.ViewSpa",
+  "name": "Destec.ViewSpa",
   "version": "0.0.1",
   "description": "Modular seed project for Angular 2 apps with fast, statically typed build",
   "repository": {
-    "url": "https://github.com/tanato/Calcular.ViewSpa"
+    "url": "https://github.com/tanato/Destec.ViewSpa"
   },
   "scripts": {
     "build.dev": "gulp build.dev --color --config-env dev",
@@ -94,13 +94,6 @@
     "gulp-watch": "4.3.8",
     "is-ci": "1.0.9",
     "isstream": "0.1.2",
-    "jasmine-core": "~2.4.1",
-    "jasmine-spec-reporter": "2.5.0",
-    "karma": "~0.13.22",
-    "karma-chrome-launcher": "~1.0.1",
-    "karma-coverage": "1.1.0",
-    "karma-jasmine": "~1.0.2",
-    "karma-mocha-reporter": "2.0.4",
     "merge-stream": "1.0.0",
     "open": "0.0.5",
     "postcss-reporter": "1.4.1",
@@ -135,6 +128,7 @@
     "@types/jquery": "^2.0.33",
     "@types/lodash": "^4.14.37",
     "@types/select2": "^4.0.30",
+    "angular2-busy": "^1.0.2",
     "angular2-moment": "^1.0.0-beta.6",
     "angular2-select2": "^1.0.0",
     "angular2-text-mask": "^1.0.1",

@@ -25,7 +25,7 @@ export class LoginComponent {
 		this.login.username = this.username;
 		this.loginService.userLogin(this.login)
 			.subscribe(response => {
-				this.router.navigateByUrl('destec/kit/cadastro');
+				this.router.navigateByUrl('destec/atividade/execucao');
 			},
 			error => {
 				alert(error);

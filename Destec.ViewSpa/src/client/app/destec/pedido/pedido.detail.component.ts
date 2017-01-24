@@ -6,6 +6,7 @@ import { PedidoService } from './pedido.service';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash';
+import { Subscription } from 'rxjs';
 
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
@@ -16,13 +17,14 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 })
 export class PedidoDetailComponent implements OnInit {
 
-    public model: Pedido = new Pedido;
-    public pedidoItem: PedidoItem = new PedidoItem;
+    private busy: Subscription;
+    private model: Pedido = new Pedido;
+    private pedidoItem: PedidoItem = new PedidoItem;
 
-    kits: Kit[];
-    public formType: string = 'new';
-    public blockEdit: boolean = true;
-    public id: Observable<string>;
+    private kits: Kit[];
+    private formType: string = 'new';
+    private blockEdit: boolean = true;
+    private id: Observable<string>;
 
     clientes = (startsWith: string): Observable<any[]> => {
         var result = this.service.getClienteSelect(startsWith);
@@ -33,9 +35,12 @@ export class PedidoDetailComponent implements OnInit {
         private kitService: KitService,
         private route: ActivatedRoute,
         private router: Router,
-        private toastr: ToastsManager) { }
+        private toastr: ToastsManager) {
+        this.model.itens = [];
+    }
 
     ngOnInit() {
+        this.model.status = 0;
         this.model.itens = [];
 
         this.kitService.getKitSelect()
@@ -68,6 +73,7 @@ export class PedidoDetailComponent implements OnInit {
                     this.model = data;
                     this.model.dataPedido = data.dataPedido ? data.dataPedido.slice(0, 10) : null;
                     this.model.prazo = data.prazo ? data.prazo.slice(0, 10) : null;
+                    this.blockEdit = true;
                     this.toastr.success('Pedido criado com sucesso!');
                 });
         } else {
@@ -76,6 +82,7 @@ export class PedidoDetailComponent implements OnInit {
                     this.model = data;
                     this.model.dataPedido = data.dataPedido ? data.dataPedido.slice(0, 10) : null;
                     this.model.prazo = data.prazo ? data.prazo.slice(0, 10) : null;
+                    this.blockEdit = true;
                     this.toastr.success('Pedido salvo com sucesso!');
                 });
         }
@@ -133,9 +140,18 @@ export class PedidoDetailComponent implements OnInit {
 
     // ToDo: Remover
     gerarPedido() {
-        this.service.generatePedido(this.model.id)
+        this.busy = this.service.generatePedido(this.model.id)
             .subscribe((data: any) => {
                 this.toastr.success('Atividades geradas com sucesso!');
+                this.onRefresh(this.model.id.toString());
+            });
+    }
+
+    cancelarPedido() {
+        this.busy = this.service.cancelPedido(this.model.id)
+            .subscribe((data: any) => {
+                this.toastr.success('Pedido Cancelado!');
+                this.onRefresh(this.model.id.toString());
             });
     }
 }

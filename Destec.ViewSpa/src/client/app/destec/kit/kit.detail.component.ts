@@ -65,14 +65,12 @@ export class KitDetailComponent implements OnInit {
 
     addAtividade() {
         // Se new, apenas insere, se edit apenas altera.
-        if (this.formType === 'new') {
+        if (this.formType === 'new' || !this.tipoAtividade.id) {
             this.tipoAtividade.kitId = this.model.id;
             this.model.tipoAtividades.push(this.tipoAtividade);
         } else if (this.tipoAtividade.id > 0) {
             let i = this.model.tipoAtividades.findIndex(x => x.id === this.tipoAtividade.id)
             this.model.tipoAtividades.splice(i, 1, this.tipoAtividade);
-        } else {
-            this.toastr.warning('Selecione um item para editar!');
         }
         this.tipoAtividade = new TipoAtividade();
         this.tipoAtividade.tempoEstimado = null;

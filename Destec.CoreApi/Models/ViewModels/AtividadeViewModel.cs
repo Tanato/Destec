@@ -20,6 +20,9 @@ namespace Destec.CoreApi.Models.ViewModels
 
         public int? FuncionarioId { get; set; }
         public Funcionario Funcionario { get; set; }
+        
+        public int? AjudanteId { get; set; }
+        public Funcionario Ajudante { get; set; }
 
         public DateTime? DataInicio { get; set; }
         public DateTime? DataFinal { get; set; }
@@ -32,8 +35,18 @@ namespace Destec.CoreApi.Models.ViewModels
 
         public DateTime? ParadaFrom { get; set; }
         public TimeSpan? Parada { get; set; }
+        
+        public DateTime? AjudaFrom { get; set; }
+        public TimeSpan? Ajuda { get; set; }
 
         public AtividadeStatusEnum Status { get; set; }
         public string StatusDescricao { get; set; }
+        
+        public double TempoCorrente { get; set; }
+        public double IntervaloCorrente { get; set; }
+
+        public bool InParada { get; set; }
+        public bool InIntervalo { get; set; }
+        public bool InAjuda { get; set; }
     }
 }

@@ -10,15 +10,21 @@
     <Grid Background="#FFF0F0F0" Loaded="Grid_Loaded">
         <Rectangle x:Name="modeBorderBottom" Fill="#FFF0F0F0" HorizontalAlignment="Left" Height="40" Margin="0,687,0,0" VerticalAlignment="Bottom" Width="2500"/>
 
-        <TextBox x:Name="mainInput" HorizontalAlignment="Left" Margin="973,525,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="164" Width="272" FontSize="110" Opacity="0" MaxLength="3" CharacterSpacing="97" TabIndex="1" KeyDown="mainInput_KeyDown" Background="#FFF0F0F0" BorderBrush="{x:Null}" LostFocus="mainInput_LostFocus"/>
-        <TextBlock Text="{Binding ElementName=mainInput,Path=Text}" Canvas.ZIndex="1" Margin="908,525,77,31" FontSize="110"/>
+        <TextBox x:Name="mainInput" HorizontalAlignment="Left" Margin="136,530,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="164" Width="272" FontSize="110" Opacity="0" MaxLength="3" CharacterSpacing="97" TabIndex="1" KeyDown="mainInput_KeyDown" Background="#FFF0F0F0" BorderBrush="{x:Null}" LostFocus="mainInput_LostFocus"/>
+        <TextBlock Text="{Binding ElementName=mainInput,Path=Text}" Canvas.ZIndex="1" Margin="275,535,710,21" FontSize="110"/>
 
-        <TextBox x:Name="labelMode" HorizontalAlignment="Left" Margin="693,576,0,0" TextWrapping="Wrap" Text="Código:" VerticalAlignment="Top" Height="80" Width="218" IsReadOnly="True" IsTapEnabled="False" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" FontSize="50" BorderBrush="{x:Null}" IsTabStop="False" Background="{x:Null}"/>
+        <TextBox x:Name="labelMode" HorizontalAlignment="Left" Margin="60,563,0,0" TextWrapping="Wrap" Text="Código:" VerticalAlignment="Top" Height="80" Width="218" IsReadOnly="True" IsTapEnabled="False" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" FontSize="50" BorderBrush="{x:Null}" IsTabStop="False" Background="{x:Null}"/>
         <TextBlock x:Name="labelAtividade" HorizontalAlignment="Left" Margin="64,123,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="407" Width="1171" FontSize="90"/>
-        <Ellipse x:Name="statusBall" Fill="#FFF0F0F0" HorizontalAlignment="Left" Height="150" Margin="79,530,0,0" VerticalAlignment="Top" Width="150" RenderTransformOrigin="0.633,0.69"/>
+        <Ellipse x:Name="statusBall" Fill="#FFF0F0F0" HorizontalAlignment="Left" Height="67" Margin="1129,40,0,0" VerticalAlignment="Top" Width="67" RenderTransformOrigin="0.633,0.69"/>
         <Rectangle x:Name="modeBorderLeft" Fill="#FFF0F0F0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Height="1080"/>
         <Rectangle x:Name="modeBorderRight" Fill="#FFF0F0F0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Margin="1250,0,0,0" Height="1080"/>
         <Rectangle x:Name="modeBorderTop" Fill="#FFF0F0F0" HorizontalAlignment="Left" Height="40" Margin="0,0,-1220,690" VerticalAlignment="Top" Width="2500"/>
-        <TextBox x:Name="labelTarefa" HorizontalAlignment="Left" Margin="52,40,0,0" TextWrapping="Wrap" Text="Tarefa:" VerticalAlignment="Top" Height="80" Width="218" IsReadOnly="True" IsTapEnabled="False" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" FontSize="50" BorderBrush="{x:Null}" IsTabStop="False" Background="{x:Null}"/>
+        <TextBox x:Name="labelTarefa" HorizontalAlignment="Left" Margin="52,40,0,0" TextWrapping="Wrap" Text="Tarefa:" VerticalAlignment="Top" Height="80" Width="218" IsReadOnly="True" IsTapEnabled="False" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" FontSize="50" BorderBrush="{x:Null}" IsTabStop="False" Background="{x:Null}" Visibility="Collapsed"/>
+
+        <!--<TextBox x:Name="helpInput" HorizontalAlignment="Left" Margin="963,535,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="164" Width="272" FontSize="110" Opacity="0" MaxLength="3" CharacterSpacing="97" TabIndex="1" KeyDown="mainInput_KeyDown" Background="#FFF0F0F0" BorderBrush="{x:Null}" LostFocus="mainInput_LostFocus"/>
+        <TextBlock Text="{Binding ElementName=helpInput,Path=Text}" Canvas.ZIndex="1" Margin="940,530,45,26" FontSize="110"/>
+
+        <TextBox x:Name="labelHelp" HorizontalAlignment="Left" Margin="676,544,0,0" TextWrapping="Wrap" Text="Código Ajuda:" VerticalAlignment="Top" Height="157" Width="272" IsReadOnly="True" IsTapEnabled="False" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" FontSize="50" BorderBrush="{x:Null}" IsTabStop="False" Background="{x:Null}" Visibility="Collapsed"/>-->
+
     </Grid>
 </Page>

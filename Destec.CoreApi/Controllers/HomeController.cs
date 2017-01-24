@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Destec.CoreApi.Controllers
 {
     public class HomeController : Controller
@@ -14,7 +9,7 @@ namespace Destec.CoreApi.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return Redirect("/swagger/ui/index.html");
+            return Redirect("/index.html");
         }
     }
 }

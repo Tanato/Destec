@@ -4,6 +4,7 @@ import { KitRoutes } from './kit/index';
 import { FuncionarioRoutes } from './funcionario/index';
 import { PedidoRoutes } from './pedido/index';
 import { AtividadeRoutes } from './atividade/index';
+import { UsuarioRoutes } from './usuario/index';
 
 import { DestecComponent } from './index';
 
@@ -16,6 +17,7 @@ export const DestecRoutes: Route[] = [
 			...FuncionarioRoutes,
 			...PedidoRoutes,
 			...AtividadeRoutes,
+			...UsuarioRoutes,
 		]
 	}
 ];

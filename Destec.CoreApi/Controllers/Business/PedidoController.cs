@@ -1,5 +1,6 @@
 ﻿using Destec.CoreApi.Models;
 using Destec.CoreApi.Models.Business;
+using Destec.CoreApi.Shared.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -36,6 +37,7 @@ namespace Destec.CoreApi.Controllers.Business
                                 Descricao = x.Descricao,
                                 Cancelado = x.Cancelado,
                                 Prazo = x.Prazo,
+                                Status = x.Status,
                                 DataPedido = x.DataPedido,
                                 Itens = x.Itens.Select(z => new PedidoItem
                                 {
@@ -65,7 +67,7 @@ namespace Destec.CoreApi.Controllers.Business
 
             db.Pedidos.Add(item);
             db.SaveChanges();
-            return Ok(item);
+            return Ok(db.Pedidos.Include(x => x.Itens).ThenInclude(x => x.Kit).Single(x => x.Id == item.Id));
         }
 
         [HttpGet("gerar/{id}")]
@@ -75,33 +77,85 @@ namespace Destec.CoreApi.Controllers.Business
                             .Include(x => x.Itens)
                                 .ThenInclude(x => x.Kit)
                                 .ThenInclude(x => x.TipoAtividades)
+                            .Include(x => x.Itens)
+                                .ThenInclude(x => x.Atividades)
+                            .Single(x => x.Id == id);
+            
+            if (pedido.Itens.Any(x => x.Atividades.Count > 0) || pedido.Status != 0)
+                return Ok(pedido);
+
+            if (!pedido.Itens.Any())
+                return BadRequest("Pedido sem itens");
+
+            pedido.Status = StatusEnum.Gerando;
+            db.SaveChanges();
+
+            var SerialId = db.Atividades.Max(x => x.KitPedidoId);
+
+            try
+            {
+                foreach (var item in pedido?.Itens)
+                {
+                    for (int i = SerialId; i <= SerialId + item.Quantidade; i++)
+                    {
+                        foreach (var atividade in item.Kit?.TipoAtividades?.Where(x => !x.Deleted).OrderBy(x => x.Grupo).ThenBy(x => x.Ordem))
+                        {
+                            db.Atividades.Add(new Atividade
+                            {
+                                PedidoItemId = item.Id,
+                                TipoAtividadeId = atividade.Id,
+                                KitPedidoId = i,
+                                Status = AtividadeStatusEnum.Criada,
+                            });
+                        }
+                        db.SaveChanges();
+                    }
+                }
+
+                pedido.Status = StatusEnum.Gerado;
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                pedido.Status = StatusEnum.Criado;
+                db.SaveChanges();
+            }
+
+            return Ok(pedido);
+        }
+
+        [HttpGet("cancelar/{id}")]
+        public IActionResult CancelarPedido(int id)
+        {
+            var pedido = db.Pedidos
+                            .Include(x => x.Itens)
+                                .ThenInclude(x => x.Kit)
+                                .ThenInclude(x => x.TipoAtividades)
+                            .Include(x => x.Itens)
+                                .ThenInclude(x => x.Atividades)
                             .Single(x => x.Id == id);
 
-            foreach (var item in pedido?.Itens)
+            pedido.Status = StatusEnum.Cancelado;
+            foreach (var item in pedido.Itens)
             {
-                for (int i = 0; i < item.Quantidade; i++)
+                item.Cancelado = true;
+
+                foreach (var atividade in item.Atividades.Where(x => !x.FuncionarioId.HasValue))
                 {
-                    foreach (var atividade in item.Kit?.TipoAtividades?.OrderBy(x => x.Ordem))
-                    {
-                        db.Atividades.Add(new Atividade
-                        {
-                            PedidoItemId = item.Id,
-                            TipoAtividadeId = atividade.Id,
-                            KitPedidoId = i,
-                        });
-                    }
+                    atividade.Status = AtividadeStatusEnum.Cancelada;
                 }
             }
 
             db.SaveChanges();
-            return Ok();
+
+            return Ok(pedido);
         }
 
         [HttpPut]
         public IActionResult Put([FromBody] Pedido update)
         {
             var item = db.Pedidos
-                        //.Include(x => x.Itens)
+                        .Include(x => x.Itens)
                         .Single(x => x.Id == update.Id);
 
             item.Codigo = update.Codigo;
@@ -110,18 +164,34 @@ namespace Destec.CoreApi.Controllers.Business
             item.DataPedido = update.DataPedido;
             item.Cancelado = update.Cancelado;
 
-            //foreach (var i in update.Itens)
-            //{
-            //    var atv = item.TipoAtividades.Single(x => x.Id == i.Id);
-            //    atv.Nome = i.Nome;
-            //    atv.Ordem = i.Ordem;
-            //    atv.Pontos = i.Pontos;
-            //    atv.Grupo = i.Grupo;
-            //    atv.TempoEstimado = i.TempoEstimado;
-            //}
+            foreach (var updateItem in update.Itens)
+            {
+                var newValue = item.Itens.SingleOrDefault(x => x.Id == updateItem.Id);
+
+                if (newValue != null)
+                {
+                    newValue.KitId = updateItem.KitId;
+                    newValue.Observacao = updateItem.Observacao;
+                    newValue.Quantidade = updateItem.Quantidade;
+                    newValue.PedidoId = updateItem.PedidoId;
+                }
+                else
+                {
+                    item.Itens.Add(new PedidoItem
+                    {
+                        KitId = updateItem.KitId,
+                        PedidoId = updateItem.PedidoId,
+                        Cancelado = false,
+                        Quantidade = updateItem.Quantidade,
+                        Observacao = updateItem.Observacao,
+                    });
+                }
+            }
 
             db.SaveChanges();
-            return Ok(item);
+            return Ok(db.Pedidos
+                        .Include(x => x.Itens).ThenInclude(x => x.Kit)
+                        .Single(x => x.Id == update.Id));
         }
 
         [HttpDelete("{id}")]

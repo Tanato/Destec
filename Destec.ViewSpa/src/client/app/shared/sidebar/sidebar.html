@@ -4,6 +4,9 @@
 <nav class="sidebar" [ngClass]="{sidebarPushRight: isActive}">
 	<ul class="list-group">
 		<br>
+		<a [routerLink]="['/destec/atividade/execucao']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+			<i class="fa fa-fw fa-wrench"></i> Execucao
+		</a>
 		<a [routerLink]="['/destec/pedido/cadastro']" [routerLinkActive]="['router-link-active']" class="list-group-item">
 			<i class="fa fa-fw fa-calendar-minus-o"></i> Pedidos
 		</a>
@@ -17,6 +20,23 @@
 			<i class="fa fa-fw fa-user"></i> Funcionario
 		</a>
 
+		<div class="nested-menu" hidden>
+			<a class="list-group-item" (click)="addExpandClass('usuario')">
+				<span><i class="fa" [class.fa-chevron-down]="showMenu === 'usuario'" [class.fa-chevron-right]="showMenu !== 'usuario'"></i>&nbsp; Usuário</span>
+			</a>
+			<li class="nested" [ngClass]="{'expand' : showMenu === 'usuario' }">
+				<ul class="submenu">
+					<li>
+						<a routerLink="/destec/usuario" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-table"></i> Cadastro
+						</a>
+						<!--<a routerLink="/destec/usuario/alterarSenha" [routerLinkActive]="['router-link-active']" class="list-group-item">
+							<i class="fa fa-fw fa-table"></i> Alterar Senha
+						</a>-->
+					</li>
+				</ul>
+			</li>
+		</div>
 
 		<!--<div class="nested-menu">
 			<a class="list-group-item" (click)="addExpandClass('cliente')">

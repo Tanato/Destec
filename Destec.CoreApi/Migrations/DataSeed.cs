@@ -45,21 +45,6 @@ namespace Destec.CoreApi.Migrations
                     Codigo = "142",
                     Inativo = false,
                     AtividadeAtualId = null,
-                    TarefaAssociadas = new TarefaAssociada[]
-                    {
-                        new TarefaAssociada { KitId = 1, Grupo = 1},
-                    }.ToList(),
-                });
-                context.Funcionarios.Add(new Funcionario
-                {
-                    Nome = "Geraldo Sergio",
-                    Codigo = "955",
-                    Inativo = false,
-                    AtividadeAtualId = null,
-                    TarefaAssociadas = new TarefaAssociada[]
-                    {
-                        new TarefaAssociada { KitId = 1, Grupo = 2},
-                    }.ToList(),
                 });
             }
 

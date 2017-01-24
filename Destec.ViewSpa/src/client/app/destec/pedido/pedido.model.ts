@@ -8,6 +8,7 @@ export class Pedido {
     prazo: any;
     cancelado: boolean;
     itens: PedidoItem[];
+    status: number;
 }
 
 export class PedidoItem {

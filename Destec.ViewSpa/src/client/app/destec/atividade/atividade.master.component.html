@@ -13,14 +13,18 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-xl-6">
+		<div class="col-xl-4">
+		</div>
+		<div class="col-xl-2">
+			<label><input type="checkbox" [(ngModel)]="finalizadas" (ngModelChange)="filter()" /> Finalizadas</label>
+			<label><input type="checkbox" [(ngModel)]="canceladas" (ngModelChange)="filter()" /> Canceladas</label>
 		</div>
 		<div class="form-group input-group col-xl-4">
 			<input type="text" class="form-control" [(ngModel)]="filterText" (keydown.Enter)="filter()">
 			<span class="input-group-btn"><button class="btn btn-secondary" (click)="filter()" type="button"><i class="fa fa-search"></i></button></span>
 		</div>
 		<div class="col-xl-2 text-center">
-			<!--<a class="btn btn-primary" routerLink="/destec/atividade/detail"><i class="fa fa-plus"></i> Adicionar</a>-->
+			<button class="form-control btn btn-primary" (click)="updateFuncionario()">Aplicar</button>
 		</div>
 	</div>
 	<div class="row">
@@ -28,13 +32,13 @@
 			<table class="table table-hover table-striped table-sm">
 				<thead>
 					<tr>
-						<th width="10"></th>
-						<th width="70">Kit</th>
+						<th width="30"></th>
+						<th width="75">Kit</th>
 						<th width="250">Atividade</th>
 						<th width="70">Ordem</th>
 						<th width="70">Grupo</th>
-						<th width="170">Pedido</th>
-						<th width="70">Kit Id</th>
+						<th width="120">Pedido</th>
+						<th width="80">Numero Kit</th>
 						<th>Funcionário</th>
 						<th width="80">Tempo</th>
 						<th width="80">Intervalo</th>
@@ -44,6 +48,8 @@
 				<tbody>
 					<tr *ngFor="let item of rows">
 						<td>
+							&nbsp;
+							<input #{{item.id}} [hidden]="item.status !== 0" [ngModel]="item.selected" (change)="checkbox(item)" type="checkbox">
 						</td>
 						<td>{{ item.tipoAtividade?.kit?.nome }}</td>
 						<td>{{ item.tipoAtividade?.nome }}</td>
@@ -51,7 +57,17 @@
 						<td>{{ item.tipoAtividade?.grupo }}</td>
 						<td>{{ item.pedidoItem?.pedido?.codigo }}</td>
 						<td>{{ item.kitPedidoId }}</td>
-						<td>{{ item.funcionario?.nome }}</td>
+						<td>
+							&nbsp;
+							<a *ngIf="!item.selected && (item.status === 1 || item.status === 2)" (click)="onDeallocate(item)"><i class="fa fa-remove"></i></a>&nbsp;
+							<label *ngIf="!item.selected"> {{ item.funcionario?.nome }} </label>
+							<div col-xl-8>
+								<select *ngIf="item.selected" class="form-control" style="padding: 0;" id="kitId" [ngModel]="item.funcionario" (ngModelChange)="refreshFuncionario($event)"
+									name="kitId" required>
+									<option *ngFor="let item of funcionarios" [ngValue]="item">{{item.nome}}</option>
+									</select>
+							</div>
+						</td>
 						<td>{{ item.tempoFormatted }}</td>
 						<td>{{ item.intervaloFormatted }}</td>
 						<td>{{ item.statusDescricao }}</td>
@@ -66,7 +82,7 @@
 			<pagination previousText="Anterior" nextText="Próximo" firstText="Primeira" lastText="Última" [totalItems]="totalItems" [(ngModel)]="currentPage"
 				[itemsPerPage]="itemsPerPage" [maxSize]="maxSize" class="pagination-sm" [boundaryLinks]="true" [rotate]="false" (numPages)="numPages = $event"
 				(pageChanged)="onPageChange($event)">
-			</pagination>
+				</pagination>
 		</div>
 	</div>
 </div>
