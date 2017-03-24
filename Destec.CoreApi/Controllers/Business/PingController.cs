@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Destec.CoreApi.Controllers.Business
 {
@@ -11,6 +7,7 @@ namespace Destec.CoreApi.Controllers.Business
     [AllowAnonymous]
     public class PingController : Controller
     {
+        [HttpGet]
         public int Get()
         {
             return 1;

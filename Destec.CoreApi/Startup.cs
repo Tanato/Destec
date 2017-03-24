@@ -1,3 +1,4 @@
+using AspNetCoreCsvImportExport.Formatters;
 using Destec.CoreApi.Migrations;
 using Destec.CoreApi.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -74,8 +75,10 @@ namespace Destec.CoreApi
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            var csvFormatterOptions = new CsvFormatterOptions();
             services.AddMvc(config =>
                 {
+                    config.OutputFormatters.Add(new CsvOutputFormatter(csvFormatterOptions));
                     config.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
                 })
                 .AddJsonOptions(options =>
@@ -85,11 +88,11 @@ namespace Destec.CoreApi
 
             services.AddSwaggerGen();
         }
-        
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseDeveloperExceptionPage();
-            
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -101,12 +104,7 @@ namespace Destec.CoreApi
 
             app.EnsureSeedIdentityAsync();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvc();
 
             app.UseSwagger();
             app.UseSwaggerUi();

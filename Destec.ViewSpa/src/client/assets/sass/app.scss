@@ -31,6 +31,13 @@
     padding: 3px 10px
 }
 
+td {
+    max-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 textarea {
     resize: none;
 }

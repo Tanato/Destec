@@ -113,8 +113,7 @@ namespace Destec.CoreApi.Controllers.Business
             db.SaveChanges();
             return Ok(item);
         }
-
-
+        
         [HttpGet("newcode")]
         public IActionResult GetCode()
         {

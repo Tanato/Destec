@@ -4,6 +4,7 @@ import { KitService } from './kit.service';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash';
+import { Subscription } from 'rxjs';
 
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
@@ -14,6 +15,7 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 })
 export class KitDetailComponent implements OnInit {
 
+    public busy: Subscription;
     public model: Kit = new Kit;
     public tipoAtividade: TipoAtividade = new TipoAtividade;
 
@@ -49,13 +51,13 @@ export class KitDetailComponent implements OnInit {
 
     save() {
         if (this.formType === 'new' && !this.model.id) {
-            this.service.postKit(this.model)
+            this.busy = this.service.postKit(this.model)
                 .subscribe((data: any) => {
                     this.model = data;
                     this.toastr.success('Kit criado com sucesso!');
                 });
         } else {
-            this.service.putKit(this.model)
+            this.busy = this.service.putKit(this.model)
                 .subscribe((data: any) => {
                     this.model = data;
                     this.toastr.success('Kit salvo com sucesso!');
@@ -103,13 +105,5 @@ export class KitDetailComponent implements OnInit {
                 this.router.navigateByUrl(link);
             }
         });
-    }
-
-    // ToDo: Remover
-    gerarPedido() {
-        this.service.generateKit(this.model.id)
-            .subscribe((data: any) => {
-                this.toastr.success('Atividades geradas com sucesso!');
-            });
     }
 }

@@ -34,7 +34,7 @@ namespace Destec.PointApp
             this.InitializeComponent();
         }
 
-        private async Task Ping(string server)
+        private async Task PingAsync(string server)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace Destec.PointApp
                     this.Frame.Navigate(typeof(MainPage), server);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 message.Text = "Ip Inválido!";
             }
@@ -55,7 +55,7 @@ namespace Destec.PointApp
             if (e.Key == VirtualKey.Enter)
             {
                 e.Handled = true;
-                await Ping(ipInput.Text.Replace(',','.'));
+                await PingAsync(ipInput.Text.Replace(',','.'));
             }
         }
 

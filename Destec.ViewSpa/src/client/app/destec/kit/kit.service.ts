@@ -36,8 +36,7 @@ export class KitService {
     }
 
     putKit(Kit: Kit) {
-        return this.http
-            .put(this.url, JSON.stringify(Kit))
+        return this.http.put(this.url, Kit)
             .map(this.handleResult)
             .catch(this.handleError);
     }
@@ -76,6 +75,6 @@ export class KitService {
 
     private handleError(error: any) {
         console.error(error);
-        return Observable.throw(error.json().Error || 'Server error');
+        return Observable.throw(error || 'Server error');
     }
 }

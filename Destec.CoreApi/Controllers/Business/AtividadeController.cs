@@ -67,7 +67,6 @@ namespace Destec.CoreApi.Controllers.Business
                                                         .Subtract(x.Intervalo ?? TimeSpan.FromTicks(0))
                                                         .Subtract(x.Parada ?? TimeSpan.FromTicks(0))
                                                         .ToString(@"hh\:mm\:ss"),
-
                               }).ToList();
 
             return Ok(result);
@@ -499,7 +498,7 @@ namespace Destec.CoreApi.Controllers.Business
                                   && t.Grupo == ta.Grupo
                                   && t.KitId == ta.KitId
                                   && ta.FuncionarioId == funcionario.Id
-                              orderby a.PedidoItem.PedidoId, a.KitPedidoId, t.Ordem
+                              orderby a.PedidoItem.PedidoId, a.KitPedidoId, t.Grupo, t.Ordem
                               select a.Id).FirstOrDefault();
 
                 if (nextId != 0)
