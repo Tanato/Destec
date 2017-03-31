@@ -13,7 +13,7 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true),
                     AtividadeAjudaId = table.Column<int>(nullable: true),
                     AtividadeAtualId = table.Column<int>(nullable: true),
                     Codigo = table.Column<string>(nullable: false),
@@ -31,7 +31,7 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true),
                     Descricao = table.Column<string>(nullable: true),
                     ExternalCode = table.Column<string>(nullable: true),
                     Inativo = table.Column<bool>(nullable: false),
@@ -47,7 +47,7 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true),
                     Cancelado = table.Column<bool>(nullable: false),
                     Codigo = table.Column<string>(nullable: true),
                     DataPedido = table.Column<DateTime>(nullable: true),
@@ -122,7 +122,7 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true),
                     FuncionarioId = table.Column<int>(nullable: false),
                     Grupo = table.Column<int>(nullable: false),
                     KitId = table.Column<int>(nullable: false)
@@ -149,7 +149,8 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Deleted = table.Column<bool>(nullable: false),
                     Grupo = table.Column<short>(nullable: false),
                     KitId = table.Column<int>(nullable: false),
                     Nome = table.Column<string>(nullable: true),
@@ -173,12 +174,17 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AndarInicial = table.Column<int>(nullable: true),
+                    Bloco = table.Column<string>(nullable: true),
                     Cancelado = table.Column<bool>(nullable: false),
                     KitId = table.Column<int>(nullable: false),
+                    NumeroInicial = table.Column<int>(nullable: true),
                     Observacao = table.Column<string>(nullable: true),
                     PedidoId = table.Column<int>(nullable: false),
-                    Quantidade = table.Column<int>(nullable: false)
+                    Quantidade = table.Column<int>(nullable: true),
+                    QuantidadeAndar = table.Column<int>(nullable: true),
+                    QuantidadeApartamentosAndar = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -202,7 +208,7 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: true)
@@ -223,7 +229,7 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
@@ -264,7 +270,7 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true),
                     RoleId = table.Column<string>(nullable: false)
@@ -309,7 +315,7 @@ namespace Destec.CoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true),
                     Ajuda = table.Column<TimeSpan>(nullable: true),
                     AjudaFrom = table.Column<DateTime>(nullable: true),
                     AjudanteId = table.Column<int>(nullable: true),
@@ -318,6 +324,7 @@ namespace Destec.CoreApi.Migrations
                     FuncionarioId = table.Column<int>(nullable: true),
                     Intervalo = table.Column<TimeSpan>(nullable: true),
                     IntervaloFrom = table.Column<DateTime>(nullable: true),
+                    KitNumero = table.Column<string>(nullable: true),
                     KitPedidoId = table.Column<int>(nullable: false),
                     Parada = table.Column<TimeSpan>(nullable: true),
                     ParadaFrom = table.Column<DateTime>(nullable: true),
@@ -428,7 +435,8 @@ namespace Destec.CoreApi.Migrations
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 table: "Roles",
-                column: "NormalizedName");
+                column: "NormalizedName",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
@@ -449,11 +457,6 @@ namespace Destec.CoreApi.Migrations
                 name: "IX_UserRoles_RoleId",
                 table: "UserRoles",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserRoles_UserId",
-                table: "UserRoles",
-                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

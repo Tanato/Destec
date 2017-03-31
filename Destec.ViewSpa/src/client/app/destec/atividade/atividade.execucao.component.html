@@ -40,7 +40,7 @@
 						<td>{{ item.tipoAtividade?.kit?.nome }}</td>
 						<td>{{ item.tipoAtividade?.nome }}</td>
 						<td>{{ item.pedidoItem?.pedido?.codigo }}</td>
-						<td>{{ item.kitPedidoId }}</td>
+						<td>{{ item.kitNumero }}</td>
 						<td>{{ item.funcionario?.nome }} <br *ngIf="item.inAjuda"/> {{ item.inAjuda ? 'Ajudante: '+ item.ajudante?.nome : '' }}</td>
 						<td>{{ item.tipoAtividade?.tempoEstimado.startsWith('00:') ? ( item.tipoAtividade?.tempoEstimado | slice:3 ) : item.tipoAtividade?.tempoEstimado }}</td>
 						<td> <label [ngClass]="{'clock-warning': tempoEstourado(item)} 	"> {{ item.tempoTimer }} </label> </td>

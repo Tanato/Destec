@@ -17,6 +17,7 @@ using System;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Destec.CoreApi
@@ -35,7 +36,7 @@ namespace Destec.CoreApi
                 .AddEnvironmentVariables();
 
             if (environment.IsDevelopment())
-                builder.AddUserSecrets();
+                builder.AddUserSecrets(typeof(Startup).GetTypeInfo().Assembly);
             else
                 builder.AddCloudFoundry();
 

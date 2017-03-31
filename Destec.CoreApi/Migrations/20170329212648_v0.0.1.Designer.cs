@@ -4,17 +4,18 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Destec.CoreApi.Models;
+using Destec.CoreApi.Shared.Enum;
 
 namespace Destec.CoreApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170304234311_v0.0.1")]
+    [Migration("20170329212648_v0.0.1")]
     partial class v001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.0-rtm-21431");
+                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
 
             modelBuilder.Entity("Destec.CoreApi.Models.Business.Atividade", b =>
                 {
@@ -36,6 +37,8 @@ namespace Destec.CoreApi.Migrations
                     b.Property<TimeSpan?>("Intervalo");
 
                     b.Property<DateTime?>("IntervaloFrom");
+
+                    b.Property<string>("KitNumero");
 
                     b.Property<int>("KitPedidoId");
 
@@ -134,15 +137,25 @@ namespace Destec.CoreApi.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("AndarInicial");
+
+                    b.Property<string>("Bloco");
+
                     b.Property<bool>("Cancelado");
 
                     b.Property<int>("KitId");
+
+                    b.Property<int?>("NumeroInicial");
 
                     b.Property<string>("Observacao");
 
                     b.Property<int>("PedidoId");
 
-                    b.Property<int>("Quantidade");
+                    b.Property<int?>("Quantidade");
+
+                    b.Property<int?>("QuantidadeAndar");
+
+                    b.Property<int?>("QuantidadeApartamentosAndar");
 
                     b.HasKey("Id");
 
@@ -177,6 +190,8 @@ namespace Destec.CoreApi.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Deleted");
 
                     b.Property<short>("Grupo");
 
@@ -217,7 +232,8 @@ namespace Destec.CoreApi.Migrations
 
             modelBuilder.Entity("Destec.CoreApi.Models.User", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
 
@@ -227,7 +243,7 @@ namespace Destec.CoreApi.Migrations
                         .IsConcurrencyToken();
 
                     b.Property<string>("Email")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
 
@@ -240,10 +256,10 @@ namespace Destec.CoreApi.Migrations
                     b.Property<string>("Name");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("Password");
 
@@ -258,7 +274,7 @@ namespace Destec.CoreApi.Migrations
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -274,20 +290,22 @@ namespace Destec.CoreApi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
                     b.Property<string>("Name")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
+                        .IsUnique()
                         .HasName("RoleNameIndex");
 
                     b.ToTable("Roles");
@@ -358,8 +376,6 @@ namespace Destec.CoreApi.Migrations
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
                 });

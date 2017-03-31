@@ -31,17 +31,6 @@
                         <input type="date" class="form-control" id="prazo" #prazo="ngModel" [ngModel]="model.prazo" (ngModelChange)="model.prazo = $event"
                             name="prazo" min="model.entrada | date" />
                     </div>
-                    <div class="form-group col-lg-4">
-                        <label>Cliente:</label>
-                        <input class="form-control" ng2-auto-complete [source]="clientes" id="cliente" [(ngModel)]="model.cliente" name="cliente"
-                            min-chars="2" [accept-user-input]="true">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-lg-8">
-                        <label>Descrição:</label>
-                        <input class="form-control" id="descricao" [(ngModel)]="model.descricao" name="descricao" />
-                    </div>
                     <div class="form-group col-lg-2">
                         <label>Status:</label>
                         <select class="form-control" id="status" [(ngModel)]="model.status" name="status" disabled>
@@ -53,44 +42,90 @@
                         </select>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="form-group col-lg-6">
+                        <label>Descrição:</label>
+                        <input class="form-control" id="descricao" [(ngModel)]="model.descricao" name="descricao" />
+                    </div>
+                    <fieldset class="form-group col-lg-4">
+                        <label>Número do Kit:</label>
+                        <br>
+                        <input type="radio" name="optionsNumeroKit" [(ngModel)]="optionsNumeroKit" id="optionSerial" value="1" checked=""> Serial
+                        <br>
+                        <input type="radio" name="optionsNumeroKit" [(ngModel)]="optionsNumeroKit" id="optionApartamento" value="2"> Andar/Apartamento
+                    </fieldset>
+                </div>
             </fieldset>
             <br>
         </form>
         <form role="formPedidoItem" #formPedidoItem="ngForm">
             <div class="card card-block">
                 <fieldset>
-                    <div class="row" [hidden]="blockEdit">
+                    <div class="row" [hidden]="blockEdit || !optionsNumeroKit">
                         <div class="form-group col-lg-2">
                             <label>Kit:</label>
                             <select class="form-control" id="kitId" [(ngModel)]="pedidoItem.kitId" (ngModelChange)="selectKit($event)" name="kitId" required>
                                 <option *ngFor="let item of kits" [ngValue]="item.id">{{item.nome}}</option>
                             </select>
                         </div>
-                        <div class="form-group col-lg-2">
+                        <div class="form-group col-lg-2" [hidden]="optionsNumeroKit != 1">
                             <label>Quantidade:</label>
                             <input type="number" step="1" class="form-control" id="quantidade" [(ngModel)]="pedidoItem.quantidade" name="quantidade"
-                                required/>
+                                [required]="optionsNumeroKit == 1"/>
                         </div>
+                        <div class="form-group col-lg-2" [hidden]="optionsNumeroKit != 1">
+                            <label>Número Inicial:</label>
+                            <input type="number" step="1" class="form-control" id="numeroInicial" [(ngModel)]="pedidoItem.numeroInicial" name="numeroInicial" [hidden]="optionsNumeroKit == 2"/>
+                        </div>
+                        <div class="form-group col-lg-4" [hidden]="optionsNumeroKit != 1" >
+                        </div>
+                        <div class="form-group col-lg-2" [hidden]="optionsNumeroKit != 2">
+                            <label>Andar Inicial:</label>
+                            <input type="number" step="1" class="form-control" id="andarInicial" [(ngModel)]="pedidoItem.andarInicial" name="andarInicial"
+                                [required]="optionsNumeroKit == 2"/>
+                        </div>
+                        <div class="form-group col-lg-2" [hidden]="optionsNumeroKit != 2">
+                            <label>Qtd Andares:</label>
+                            <input type="number" step="1" class="form-control" id="quantidadeAndar" [(ngModel)]="pedidoItem.quantidadeAndar" name="quantidadeAndar"
+                                [required]="optionsNumeroKit == 2"/>
+                        </div>
+                        <div class="form-group col-lg-2" [hidden]="optionsNumeroKit != 2">
+                            <label>Apto/Andar:</label>
+                            <input type="number" step="1" class="form-control" id="quantidadeApartamentosAndar" [(ngModel)]="pedidoItem.quantidadeApartamentosAndar" name="quantidadeApartamentosAndar"
+                                [required]="optionsNumeroKit == 2"/>
+                        </div>
+                        <div class="form-group col-lg-2" [hidden]="optionsNumeroKit != 2">
+                            <label>Bloco:</label>
+                            <input class="form-control" id="bloco" [(ngModel)]="pedidoItem.bloco" name="bloco"/>
+                        </div>
+                    <!--</div>
+                    <div class="row" [hidden]="blockEdit">
                         <div class="form-group col-lg-4">
                             <label>Descrição:</label>
                             <input class="form-control" id="descricao" [(ngModel)]="pedidoItem.descricao" name="descricao" />
                         </div>
-                        <div class="col-lg-2 text-center">
+                        <div class="form-group col-lg-4">
+                        </div>
+                         <div class="form-group col-lg-2" [hidden]="this.pedidoItem.id" >
+                        </div>-->
+                        <div class="form-group col-lg-1" [hidden]="this.pedidoItem.id">
+                        </div>
+                        <div class="col-lg-1 text-center" [hidden]="!this.pedidoItem.id">
                             <label>&nbsp;</label>
                             <button type="button" class="btn btn-default btn-block" (click)="cancelChange()">
-                                <i class="fa fa-times" ></i> Cancelar
+                                <i class="fa fa-times" ></i>
                             </button>
                         </div>
-                        <div class="col-lg-2 text-center" [hidden]="this.pedidoItem.id > 0">
+                        <div class="col-lg-1 text-center" [hidden]="this.pedidoItem.id > 0">
                             <label>&nbsp;</label>
                             <button type="button" class="btn btn-primary btn-block" [disabled]="!formPedidoItem.form.valid || !pedidoItem.kitId" (click)="addItem()">
-                                <i class="fa fa-plus" ></i> Kit
+                                <i class="fa fa-plus" ></i>
                             </button>
                         </div>
-                        <div class="col-lg-2 text-center" [hidden]="!this.pedidoItem.id">
+                        <div class="col-lg-1 text-center" [hidden]="!this.pedidoItem.id">
                             <label>&nbsp;</label>
                             <button type="button" class="btn btn-primary btn-block" (click)="addItem()">
-                                <i class="fa fa-check" ></i> Alterar
+                                <i class="fa fa-check" ></i>
                             </button>
                         </div>
                     </div>
@@ -104,7 +139,11 @@
                                 <th width="40"></th>
                                 <th>Kit</th>
                                 <th>Quantidade</th>
-                                <th>Descrição</th>
+                                <th>Número Inicial</th>
+                                <th>Andar Inicial</th>
+                                <th>Qtd Andar</th>
+                                <th>Qtd Apto/Andar</th>
+                                <th>Bloco</th>
                                 <th *ngIf="formType === 'edit'" width="90">Pendentes</th>
                                 <th width="50"></th>
                             </tr>
@@ -117,8 +156,12 @@
                                 </td>
                                 <td>{{ item.kit?.nome }}</td>
                                 <td>{{ item.quantidade }}</td>
-                                <td>{{ item.descricao }}</td>
-                                <td *ngIf="formType === 'edit'">{{ item.quantidade }}</td>
+                                <td>{{ item.numeroInicial }}</td>
+                                <td>{{ item.andarInicial }}</td>
+                                <td>{{ item.quantidadeAndar }}</td>
+                                <td>{{ item.quantidadeApartamentosAndar }}</td>
+                                <td>{{ item.bloco }}</td>
+                                <td *ngIf="formType === 'edit'">{{ item.quantidade ? item.quantidade : item.quantidadeAndar * item.quantidadeApartamentosAndar }}</td>
                                 <td>{{ item.cancelado ? 'Cancelado' : '' }}</td>
                             </tr>
                         </tbody>

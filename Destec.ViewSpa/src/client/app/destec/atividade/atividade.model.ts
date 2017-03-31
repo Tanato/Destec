@@ -5,6 +5,7 @@ import { Funcionario } from '../funcionario/funcionario.model';
 export class Atividade {
     id: number;
     kitPedidoId: string;
+    kitNumero: string;
     pedidoItem: PedidoItem;
     pedidoItemId: number;
     funcionario: Funcionario;
@@ -22,7 +23,7 @@ export class Atividade {
     inIntervalo: boolean;
     inParada: boolean;
     inAjuda: boolean;
-
+    
     timer: any;
     timerSubs: any;
     tempoCorrente: number;

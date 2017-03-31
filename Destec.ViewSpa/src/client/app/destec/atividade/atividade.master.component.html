@@ -56,7 +56,7 @@
 						<td>{{ item.tipoAtividade?.ordem }}</td>
 						<td>{{ item.tipoAtividade?.grupo }}</td>
 						<td>{{ item.pedidoItem?.pedido?.codigo }}</td>
-						<td>{{ item.kitPedidoId }}</td>
+						<td>{{ item.kitNumero }}</td>
 						<td>
 							&nbsp;
 							<a *ngIf="!item.selected && (item.status === 1 || item.status === 2)" (click)="onDeallocate(item)"><i class="fa fa-remove"></i></a>&nbsp;

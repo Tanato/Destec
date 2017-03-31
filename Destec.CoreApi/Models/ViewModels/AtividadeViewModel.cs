@@ -11,6 +11,7 @@ namespace Destec.CoreApi.Models.ViewModels
     {
         public int Id { get; set; }
         public int KitPedidoId { get; set; }
+        public string KitNumero { get; set; }
 
         public int TipoAtividadeId { get; set; }
         public TipoAtividade TipoAtividade { get; set; }

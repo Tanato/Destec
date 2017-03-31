@@ -80,7 +80,7 @@ namespace Destec.CoreApi.Controllers.Business
                             .Include(x => x.Itens)
                                 .ThenInclude(x => x.Atividades)
                             .Single(x => x.Id == id);
-            
+
             if (pedido.Itens.Any(x => x.Atividades.Count > 0) || pedido.Status != 0)
                 return Ok(pedido);
 
@@ -89,14 +89,15 @@ namespace Destec.CoreApi.Controllers.Business
 
             pedido.Status = StatusEnum.Gerando;
             db.SaveChanges();
-
-            var SerialId = db.Atividades.Max(x => x.KitPedidoId);
-
+            
             try
             {
                 foreach (var item in pedido?.Itens)
                 {
-                    for (int i = SerialId; i <= SerialId + item.Quantidade; i++)
+                    var SerialId = db.Atividades.Max(x => x.KitPedidoId);
+                    var quantidadeKits = item.Quantidade ?? (item.QuantidadeApartamentosAndar * item.QuantidadeAndar) ?? throw new Exception("Quantidade do item não informado");
+
+                    for (int i = 0; i < quantidadeKits; i++)
                     {
                         foreach (var atividade in item.Kit?.TipoAtividades?.Where(x => !x.Deleted).OrderBy(x => x.Grupo).ThenBy(x => x.Ordem))
                         {
@@ -104,7 +105,8 @@ namespace Destec.CoreApi.Controllers.Business
                             {
                                 PedidoItemId = item.Id,
                                 TipoAtividadeId = atividade.Id,
-                                KitPedidoId = i,
+                                KitPedidoId = i + SerialId,
+                                KitNumero = GetKitNumero(item, i),
                                 Status = AtividadeStatusEnum.Criada,
                             });
                         }
@@ -213,6 +215,31 @@ namespace Destec.CoreApi.Controllers.Business
                 db.SaveChanges();
                 return Ok();
             }
+        }
+
+        /// <summary>
+        /// Retorna o número do Kit
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        private string GetKitNumero(PedidoItem item, int i)
+        {
+            if (item.Quantidade.HasValue)
+            {
+                return (item.NumeroInicial + i).ToString();
+            }
+            else if (item.QuantidadeApartamentosAndar.HasValue && item.AndarInicial.HasValue)
+            {
+                var andar = (i / item.QuantidadeApartamentosAndar.Value) + item.AndarInicial.Value;
+                var apto = i % item.QuantidadeApartamentosAndar.Value + 1;
+                if (!string.IsNullOrEmpty(item.Bloco))
+                    return $"BL{ item.Bloco }AP{ andar }{ apto.ToString("D2") }";
+                else
+                    return $"AP{ andar }{ apto.ToString("D2") }";
+            }
+            else
+                return string.Empty;
         }
     }
 }

@@ -6,7 +6,10 @@ namespace Destec.CoreApi.Models.Business
     public class Atividade
     {
         public int Id { get; set; }
+
+        // Id é o identificador único do Kit, KitNumero é o numero de exibição de acordo com o cliente.
         public int KitPedidoId { get; set; }
+        public string KitNumero { get; set; }
 
         public int TipoAtividadeId { get; set; }
         public TipoAtividade TipoAtividade { get; set; }

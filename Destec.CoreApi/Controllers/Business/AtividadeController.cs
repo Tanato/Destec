@@ -57,6 +57,7 @@ namespace Destec.CoreApi.Controllers.Business
                                   FuncionarioId = x.FuncionarioId,
                                   Intervalo = x.Intervalo,
                                   KitPedidoId = x.KitPedidoId,
+                                  KitNumero = x.KitNumero,
                                   Status = x.Status,
                                   StatusDescricao = EnumHelpers.GetEnumDescription(x.Status),
                                   PedidoItemId = x.PedidoItemId,
@@ -76,56 +77,57 @@ namespace Destec.CoreApi.Controllers.Business
         public IActionResult GetExecucao()
         {
             var result = db.Atividades
-                        .Include(x => x.Funcionario)
-                        .Include(x => x.Ajudante)
-                        .Include(x => x.PedidoItem).ThenInclude(x => x.Pedido)
-                        .Include(x => x.TipoAtividade).ThenInclude(x => x.Kit)
-                        .Where(x => x.Status == AtividadeStatusEnum.EmExecucao)
-                        .OrderBy(x => x.DataInicio)
-                        .ToList()
-                        .Select(x => new AtividadeViewModel
-                        {
-                            Id = x.Id,
-                            PedidoItemId = x.PedidoItemId,
-                            PedidoItem = new PedidoItem { Pedido = new Pedido { Codigo = x.PedidoItem.Pedido.Codigo } },
-                            KitPedidoId = x.KitPedidoId,
-
-                            Status = x.Status,
-                            StatusDescricao = EnumHelpers.GetEnumDescription(x.Status),
-
-                            TipoAtividadeId = x.TipoAtividadeId,
-                            TipoAtividade = new TipoAtividade
+                            .Include(x => x.Funcionario)
+                            .Include(x => x.Ajudante)
+                            .Include(x => x.PedidoItem).ThenInclude(x => x.Pedido)
+                            .Include(x => x.TipoAtividade).ThenInclude(x => x.Kit)
+                            .Where(x => x.Status == AtividadeStatusEnum.EmExecucao)
+                            .OrderBy(x => x.DataInicio)
+                            .ToList()
+                            .Select(x => new AtividadeViewModel
                             {
-                                Nome = x.TipoAtividade.Nome,
-                                Ordem = x.TipoAtividade.Ordem,
-                                Grupo = x.TipoAtividade.Grupo,
-                                Kit = new Kit { Nome = x.TipoAtividade.Kit.Nome },
-                                TempoEstimado = x.TipoAtividade.TempoEstimado,
-                                Pontos = x.TipoAtividade.Pontos,
-                            },
+                                Id = x.Id,
+                                PedidoItemId = x.PedidoItemId,
+                                PedidoItem = new PedidoItem { Pedido = new Pedido { Codigo = x.PedidoItem.Pedido.Codigo } },
+                                KitPedidoId = x.KitPedidoId,
+                                KitNumero = x.KitNumero,
 
-                            FuncionarioId = x.FuncionarioId,
-                            Funcionario = new Funcionario { Nome = x.Funcionario?.Nome },
+                                Status = x.Status,
+                                StatusDescricao = EnumHelpers.GetEnumDescription(x.Status),
 
-                            AjudanteId = x.AjudanteId,
-                            Ajudante = new Funcionario { Nome = x.Ajudante?.Nome },
+                                TipoAtividadeId = x.TipoAtividadeId,
+                                TipoAtividade = new TipoAtividade
+                                {
+                                    Nome = x.TipoAtividade.Nome,
+                                    Ordem = x.TipoAtividade.Ordem,
+                                    Grupo = x.TipoAtividade.Grupo,
+                                    Kit = new Kit { Nome = x.TipoAtividade.Kit.Nome },
+                                    TempoEstimado = x.TipoAtividade.TempoEstimado,
+                                    Pontos = x.TipoAtividade.Pontos,
+                                },
 
-                            InAjuda = x.AjudaFrom.HasValue,
+                                FuncionarioId = x.FuncionarioId,
+                                Funcionario = new Funcionario { Nome = x.Funcionario?.Nome },
 
-                            InParada = x.ParadaFrom.HasValue,
-                            Parada = x.Parada,
+                                AjudanteId = x.AjudanteId,
+                                Ajudante = new Funcionario { Nome = x.Ajudante?.Nome },
 
-                            InIntervalo = x.IntervaloFrom.HasValue,
+                                InAjuda = x.AjudaFrom.HasValue,
 
-                            DataInicio = x.DataInicio,
-                            TempoCorrente = (x.IntervaloFrom ?? x.ParadaFrom ?? DateTime.Now).Subtract(x.DataInicio.Value)
-                                                        .Subtract(x.Intervalo ?? TimeSpan.FromTicks(0))
-                                                        .Subtract(x.Parada ?? TimeSpan.FromTicks(0)).TotalMilliseconds,
+                                InParada = x.ParadaFrom.HasValue,
+                                Parada = x.Parada,
 
-                            Intervalo = x.Intervalo,
-                            IntervaloCorrente = DateTime.Now.Subtract(x.IntervaloFrom ?? DateTime.Now)
-                                                            .Add(x.Intervalo ?? TimeSpan.FromTicks(0)).TotalMilliseconds,
-                        }).ToList();
+                                InIntervalo = x.IntervaloFrom.HasValue,
+
+                                DataInicio = x.DataInicio,
+                                TempoCorrente = (x.IntervaloFrom ?? x.ParadaFrom ?? DateTime.Now).Subtract(x.DataInicio.Value)
+                                                            .Subtract(x.Intervalo ?? TimeSpan.FromTicks(0))
+                                                            .Subtract(x.Parada ?? TimeSpan.FromTicks(0)).TotalMilliseconds,
+
+                                Intervalo = x.Intervalo,
+                                IntervaloCorrente = DateTime.Now.Subtract(x.IntervaloFrom ?? DateTime.Now)
+                                                                .Add(x.Intervalo ?? TimeSpan.FromTicks(0)).TotalMilliseconds,
+                            }).ToList();
 
             return Ok(result);
         }

@@ -14,10 +14,18 @@ export class Pedido {
 export class PedidoItem {
     id: number;
     observacao: string;
-    quantidade: number;
     pedidoId: number;
     pedido: Pedido;
     kitId: number;
     kit: Kit;
+
+    quantidade: number;
+    numeroInicial: number;
+    
+    andarInicial: number;
+    quantidadeAndar: number;
+    quantidadeApartamentosAndar: number;
+    bloco: string;
+
     cancelado: boolean;
 }
